@@ -114,7 +114,7 @@ function leerFilas(archivo: string): FilaEstudiante[] {
     const codigo = limpio(f[1]);
     const nivelAcademico = limpio(f[3]);
     const montoMatriculaRaw = f[13];
-    let montoMensualidadRaw = f[14];
+    let montoMensualidadRaw: number | null = typeof f[14] === "number" ? f[14] : null;
     const programaTexto = limpio(f[12]);
 
     // Se saltan las filas sin nivel académico ni matrícula: son anotaciones
@@ -129,7 +129,7 @@ function leerFilas(archivo: string): FilaEstudiante[] {
     // ICCM cubre el 100% de su mensualidad, así que el colegio no la
     // factura (ese ingreso entra por el libro de ICCM, no por este). Se
     // registra como 0 en vez de descartar al alumno.
-    if (typeof montoMensualidadRaw !== "number") {
+    if (montoMensualidadRaw === null) {
       if (programaTexto === "ICCM") {
         montoMensualidadRaw = 0;
       } else {

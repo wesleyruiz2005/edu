@@ -1,6 +1,7 @@
 "use client";
 
-import { exportarPlanillaAction, nombreTipoNomina, type PlanillaResumen } from "../../app/nomina/actions";
+import { exportarPlanillaAction, type PlanillaResumen } from "../../app/nomina/actions";
+import { nombreTipoNomina } from "../../lib/nomina/etiquetas";
 import BotonDescargarExcel from "../shared/BotonDescargarExcel";
 
 interface Props {
