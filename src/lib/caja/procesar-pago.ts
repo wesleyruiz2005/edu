@@ -421,7 +421,8 @@ export async function procesarPago(prisma: PrismaClient, pago: ObjetoPago): Prom
                 estudianteId: estudiante.id,
                 conceptoId: concepto.id,
                 anioLectivoId: anioDestino.id,
-                mes: null,
+                // ponytail: mismo cast que en generar-cargos.ts (llave única tipada como number)
+                mes: null as unknown as number,
               },
             },
           });

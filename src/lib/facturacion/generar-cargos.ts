@@ -119,7 +119,9 @@ export async function crearOActualizarCargo(prisma: PrismaClient, p: ParametrosC
         estudianteId: p.estudianteId,
         conceptoId: p.concepto.id,
         anioLectivoId: p.anioLectivoId,
-        mes: p.mes,
+        // ponytail: Prisma tipa `mes` como number en la llave única aunque la columna sea nullable;
+        // quitar el cast cuando se regenere el cliente con el campo opcional.
+        mes: p.mes as number,
       },
     },
   });
