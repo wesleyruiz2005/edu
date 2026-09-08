@@ -1,0 +1,16 @@
+[
+  {
+    "nombre": "Media Beca",
+    "tipoCalculo": "PORCENTAJE",
+    "valor": 50,
+    "aplicaAConcepto": "Mensualidad",
+    "_nota": "Confirmado con datos reales de El Mesías: los 7 alumnos marcados 'MEDIA'/'MEDIA BECA' en la columna Programa pagan Mensualidad = 325 (mitad de C$650 de Matrícula) -- la beca solo toca Mensualidad, Matrícula se cobra completa."
+  },
+  {
+    "nombre": "Beca Interna",
+    "tipoCalculo": "PORCENTAJE",
+    "valor": 0,
+    "aplicaAConcepto": null,
+    "_nota": "Los 7 alumnos marcados 'INTERNA'/'B. INTERNA' en El Mesías aparecen con Mensualidad = Matrícula (sin descuento numérico visible en esas 2 columnas) -- se registra como dato informativo/de trazabilidad por ahora (valor 0 = no reduce nada automáticamente). Pendiente confirmar con Eduardo si esta beca debería reducir algún otro concepto (Papelería, Décimo Tercero) que no aparece en la hoja 'Base de Datos'."
+  }
+]

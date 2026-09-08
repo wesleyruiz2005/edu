@@ -1,0 +1,22 @@
+[
+  {
+    "codigo": "CMLM",
+    "nombre": "Colegio Privado Metodista Libre - El Mesías",
+    "tipo": "PREESCOLAR_PRIMARIA",
+    "prefijoIccm": "NC100"
+  },
+  {
+    "codigo": "CBP",
+    "nombre": "Colegio El Buen Pastor",
+    "tipo": "PREESCOLAR_PRIMARIA",
+    "prefijoIccm": "NC200",
+    "_nota": "Nombre confirmado en Sistema_Contable_ICCM_2026.xlsm (hoja Colegios). Confírmame el código corto (CBP) si prefieres otro."
+  },
+  {
+    "codigo": "ITML",
+    "nombre": "Instituto Tecnológico Metodista Libre de Nicaragua",
+    "tipo": "INSTITUTO_TECNICO",
+    "prefijoIccm": "NC300",
+    "_nota": "El prefijo NC300 recién aparece en los reportes ICCM de 2026 -- el Instituto se incorporó al programa este año."
+  }
+]

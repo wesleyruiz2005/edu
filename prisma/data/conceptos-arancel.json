@@ -1,0 +1,22 @@
+[
+  { "nombre": "Matricula", "cuentaCodigo": "410101", "esRecurrenteMensual": false, "aplicaRecargoMora": false },
+  { "nombre": "Mensualidad", "cuentaCodigo": "410102", "esRecurrenteMensual": true, "aplicaRecargoMora": true },
+  { "nombre": "Papelería", "cuentaCodigo": "410103", "esRecurrenteMensual": false, "aplicaRecargoMora": false },
+  { "nombre": "Decimo Tercer Mes", "cuentaCodigo": "410104", "esRecurrenteMensual": false, "aplicaRecargoMora": false },
+  { "nombre": "Ingresos por Promoción", "cuentaCodigo": "410105", "esRecurrenteMensual": false, "aplicaRecargoMora": false },
+
+  { "nombre": "Matricula (C.T.)", "cuentaCodigo": "410201", "esRecurrenteMensual": false, "aplicaRecargoMora": false },
+  { "nombre": "Mensualidad (C.T.)", "cuentaCodigo": "410202", "esRecurrenteMensual": true, "aplicaRecargoMora": true },
+  { "nombre": "Papelería (C.T.)", "cuentaCodigo": "410203", "esRecurrenteMensual": false, "aplicaRecargoMora": false },
+  { "nombre": "Ingresos por Promoción (C.T.)", "cuentaCodigo": "410204", "esRecurrenteMensual": false, "aplicaRecargoMora": false },
+
+  { "nombre": "Matricula (S.T.)", "cuentaCodigo": "410209", "esRecurrenteMensual": false, "aplicaRecargoMora": false },
+  { "nombre": "Mensualidad (S.T.)", "cuentaCodigo": "410210", "esRecurrenteMensual": true, "aplicaRecargoMora": true },
+  { "nombre": "Papelería (S.T.)", "cuentaCodigo": "410211", "esRecurrenteMensual": false, "aplicaRecargoMora": false },
+
+  { "nombre": "Matricula (C.L.)", "cuentaCodigo": "410212", "esRecurrenteMensual": false, "aplicaRecargoMora": false },
+  { "nombre": "Mensualidad (C.L.)", "cuentaCodigo": "410213", "esRecurrenteMensual": true, "aplicaRecargoMora": true },
+  { "nombre": "Papelería (C.L.)", "cuentaCodigo": "410214", "esRecurrenteMensual": false, "aplicaRecargoMora": false },
+
+  { "nombre": "ICCM - Mensualidad", "cuentaCodigo": "410301", "esRecurrenteMensual": true, "aplicaRecargoMora": true }
+]

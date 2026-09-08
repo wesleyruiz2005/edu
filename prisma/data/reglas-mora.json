@@ -1,0 +1,9 @@
+[
+  {
+    "_comentario": "Regla global (colegioCodigo: null aplica a los 3 colegios). Si algún colegio necesitara un día límite o porcentaje distinto, agrega otro registro con su 'colegioCodigo' -- esa regla más específica manda sobre la global.",
+    "colegioCodigo": null,
+    "diaLimitePago": 5,
+    "porcentajeRecargo": 10.0,
+    "vigenteDesde": "2026-01-01"
+  }
+]

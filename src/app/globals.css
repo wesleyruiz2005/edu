@@ -1,0 +1,295 @@
+/* ============================================================================
+   ESTILOS BASE -- todas las pantallas del sistema
+   ============================================================================
+   Sin frameworks de CSS a propósito (todavía no hace falta Tailwind ni
+   nada externo): son pocas reglas, pensadas para que los reportes y
+   formularios se vean limpios y sean fáciles de escanear rápido en caja.
+*/
+:root {
+  --color-fondo: #f5f6f8;
+  --color-superficie: #ffffff;
+  --color-texto: #1a1d23;
+  --color-texto-suave: #5b6270;
+  --color-borde: #dde1e7;
+  --color-primario: #1d4ed8;
+  --color-primario-hover: #1e40af;
+  --color-exito: #15803d;
+  --color-exito-fondo: #ecfdf3;
+  --color-alerta: #b45309;
+  --color-alerta-fondo: #fffbeb;
+  --color-peligro: #b91c1c;
+  --color-peligro-fondo: #fef2f2;
+  --radio: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+a {
+  color: var(--color-primario);
+}
+
+.app-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: var(--color-superficie);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.app-header nav a {
+  margin-left: 18px;
+  text-decoration: none;
+  color: var(--color-texto-suave);
+  font-weight: 500;
+}
+
+.app-header nav a:hover {
+  color: var(--color-primario);
+}
+
+.app-header strong {
+  font-size: 15px;
+}
+
+h1 {
+  font-size: 22px;
+  margin: 0 0 4px;
+}
+
+h2 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+
+.subtitulo {
+  color: var(--color-texto-suave);
+  margin: 0 0 24px;
+}
+
+.tarjeta {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 780px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-borde);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--color-superficie);
+  color: var(--color-texto);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 1px;
+}
+
+.campo {
+  margin-bottom: 14px;
+}
+
+button {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  padding: 9px 16px;
+}
+
+.boton-primario {
+  background: var(--color-primario);
+  color: #fff;
+}
+
+.boton-primario:hover {
+  background: var(--color-primario-hover);
+}
+
+.boton-primario:disabled {
+  background: #9db3e8;
+  cursor: not-allowed;
+}
+
+.boton-secundario {
+  background: var(--color-superficie);
+  border-color: var(--color-borde);
+  color: var(--color-texto);
+}
+
+.boton-secundario:hover {
+  border-color: var(--color-primario);
+}
+
+.boton-texto {
+  background: transparent;
+  border: none;
+  color: var(--color-primario);
+  padding: 4px 6px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+th {
+  color: var(--color-texto-suave);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.badge-vencido {
+  background: var(--color-peligro-fondo);
+  color: var(--color-peligro);
+}
+
+.badge-al-dia {
+  background: var(--color-exito-fondo);
+  color: var(--color-exito);
+}
+
+.aviso {
+  border-radius: var(--radio);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 13.5px;
+}
+
+.aviso-alerta {
+  background: var(--color-alerta-fondo);
+  color: var(--color-alerta);
+  border: 1px solid #fde8c7;
+}
+
+.aviso-exito {
+  background: var(--color-exito-fondo);
+  color: var(--color-exito);
+  border: 1px solid #bbf0cf;
+}
+
+.aviso-error {
+  background: var(--color-peligro-fondo);
+  color: var(--color-peligro);
+  border: 1px solid #f8caca;
+}
+
+.texto-suave {
+  color: var(--color-texto-suave);
+}
+
+.monto {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.fila-total {
+  font-weight: 700;
+  border-top: 2px solid var(--color-texto);
+}
+
+.tarjetas-resumen {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 780px) {
+  .tarjetas-resumen {
+    grid-template-columns: 1fr;
+  }
+}
+
+.resumen-item {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 14px 16px;
+}
+
+.resumen-item .valor {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.resumen-item.acento-peligro .valor {
+  color: var(--color-peligro);
+}
+
+.resumen-item.acento-primario .valor {
+  color: var(--color-primario);
+}

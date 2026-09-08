@@ -1,0 +1,16 @@
+[
+  { "nombre": "I Nivel", "modalidad": "Educación Preescolar y Primaria", "orden": 1, "esNivelGraduacion": false },
+  { "nombre": "II Nivel", "modalidad": "Educación Preescolar y Primaria", "orden": 2, "esNivelGraduacion": false },
+  { "nombre": "III Nivel", "modalidad": "Educación Preescolar y Primaria", "orden": 3, "esNivelGraduacion": true, "_nota": "Nivel de graduación de Preescolar -- combos de promoción (hoja 'Control Promociones III Nivel')." },
+  { "nombre": "1er. Grado", "modalidad": "Educación Preescolar y Primaria", "orden": 4, "esNivelGraduacion": false },
+  { "nombre": "2do. Grado", "modalidad": "Educación Preescolar y Primaria", "orden": 5, "esNivelGraduacion": false },
+  { "nombre": "3er. Grado", "modalidad": "Educación Preescolar y Primaria", "orden": 6, "esNivelGraduacion": false },
+  { "nombre": "4to. Grado", "modalidad": "Educación Preescolar y Primaria", "orden": 7, "esNivelGraduacion": false },
+  { "nombre": "5to. Grado", "modalidad": "Educación Preescolar y Primaria", "orden": 8, "esNivelGraduacion": false },
+  { "nombre": "6to. Grado", "modalidad": "Educación Preescolar y Primaria", "orden": 9, "esNivelGraduacion": true, "_nota": "Nivel de graduación de Primaria -- combos de promoción (hoja 'Control Promociones 6to.')." },
+  { "nombre": "7mo. Grado", "modalidad": "Secundaria Técnica", "orden": 1, "esNivelGraduacion": false, "_nota": "Instituto Tecnológico (ITML). Extraído de 'Ingresos 2026 ITML ACTUALIZADO 1.xlsx', hoja 'Base de Datos' (33 alumnos) -- también tiene su propia hoja '7mo' en ese Excel." },
+  { "nombre": "8vo. Grado", "modalidad": "Secundaria Técnica", "orden": 2, "esNivelGraduacion": false, "_nota": "Instituto Tecnológico (ITML). 33 alumnos en la hoja 'Base de Datos'." },
+  { "nombre": "9no. Grado", "modalidad": "Secundaria Técnica", "orden": 3, "esNivelGraduacion": false, "_nota": "Instituto Tecnológico (ITML). 36 alumnos en la hoja 'Base de Datos'." },
+  { "nombre": "10mo. Grado", "modalidad": "Secundaria Técnica", "orden": 4, "esNivelGraduacion": false, "_nota": "Instituto Tecnológico (ITML). 21 alumnos en la hoja 'Base de Datos'." },
+  { "nombre": "11mo. Grado", "modalidad": "Secundaria Técnica", "orden": 5, "esNivelGraduacion": true, "_nota": "Instituto Tecnológico (ITML). Nivel de graduación de Secundaria Técnica -- 29 alumnos en la hoja 'Base de Datos'. Pendiente confirmar con Eduardo si aplica Control de Promociones (combos de graduación) igual que Preescolar/Primaria." }
+]

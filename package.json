@@ -1,0 +1,55 @@
+{
+  "name": "sistema-contable-colegios",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sistema contable y de cobranza multi-colegio (Next.js + PostgreSQL/Prisma)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:studio": "prisma studio",
+    "seed": "tsx prisma/seed.ts && tsx prisma/seed-aranceles.ts && tsx prisma/seed-iccm-ninos.ts && tsx prisma/seed-niveles-becas.ts && tsx prisma/seed-usuarios.ts",
+    "seed:catalogo": "tsx prisma/seed.ts",
+    "seed:aranceles": "tsx prisma/seed-aranceles.ts",
+    "seed:iccm-ninos": "tsx prisma/seed-iccm-ninos.ts",
+    "seed:niveles-becas": "tsx prisma/seed-niveles-becas.ts",
+    "seed:usuarios": "tsx prisma/seed-usuarios.ts",
+    "importar-historico-iccm": "tsx scripts/importar-historico-iccm.ts",
+    "importar-estudiantes-el-mesias": "tsx scripts/importar-estudiantes-el-mesias.ts",
+    "importar-estudiantes-itml": "tsx scripts/importar-estudiantes-itml.ts",
+    "probar-reglas": "node --experimental-strip-types scripts/probar-reglas.ts",
+    "probar-modulo-pago": "tsx scripts/probar-modulo-pago.ts",
+    "probar-nominas-reales": "node --experimental-strip-types scripts/probar-nominas-reales.ts",
+    "probar-nominas-buen-pastor": "node --experimental-strip-types scripts/probar-nominas-buen-pastor-reales.ts",
+    "probar-auth": "node --experimental-strip-types scripts/probar-auth.ts",
+    "facturar:mensual": "tsx scripts/facturar-mensual.ts",
+    "facturar:anual": "tsx scripts/facturar-anual.ts",
+    "facturar:nov-dic": "tsx scripts/facturar-nov-dic.ts",
+    "aplicar-mora": "tsx scripts/aplicar-mora.ts",
+    "ejemplo-pago": "tsx scripts/ejemplo-pago.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^2.4.3",
+    "next": "^15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.20.1",
+    "@types/react": "^19.0.7",
+    "prisma": "^6.19.3",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

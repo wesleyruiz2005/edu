@@ -1,0 +1,1396 @@
+// ============================================================================
+// Sistema Contable Multi-Colegio — Prisma Schema
+// Fuente: diseno-base-datos.md (proyecto "Sistema Contable Para Colegios")
+// Motor: PostgreSQL (Supabase / Neon)
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// 1. NÚCLEO / CATÁLOGOS GENERALES
+// ============================================================================
+
+enum TipoColegio {
+  PREESCOLAR_PRIMARIA
+  INSTITUTO_TECNICO
+}
+
+/// Distingue los "libros contables" (empresas) que conviven en el mismo
+/// sistema: el del colegio (córdobas, DGI/MINED) y el del Programa ICCM
+/// (dólares, patrocinios FMC-USA). Comparten el motor de partida doble
+/// (Comprobante/AsientoContable) pero NUNCA se mezclan sus catálogos de
+/// cuentas -- por eso `CatalogoCuenta.codigo` ya no es único a secas, sino
+/// único POR libro (dos libros pueden reusar el mismo código, ej. ambos
+/// tienen un "110101 Caja General" que son cuentas distintas).
+enum LibroContable {
+  COLEGIO
+  ICCM
+}
+
+model Colegio {
+  id           Int         @id @default(autoincrement())
+  codigo       String      @unique @db.VarChar(10) // ej. CMLM, CBP, ITML
+  nombre       String      @db.VarChar(150)
+  tipo         TipoColegio
+  direccion    String?
+  telefono     String?
+  ruc          String?
+  /// Prefijo de código ICCM de esta sede (NC100 = El Mesías, NC200 = El Buen
+  /// Pastor, NC300 = Instituto Tecnológico) -- permite ubicar automáticamente
+  /// a qué colegio pertenece un niño patrocinado por su código NC-xxx-xxxxx.
+  prefijoIccm  String?     @map("prefijo_iccm") @db.VarChar(10)
+  activo       Boolean     @default(true)
+  creadoEn     DateTime    @default(now()) @map("creado_en")
+
+  secciones             Seccion[]
+  estudiantes           Estudiante[]
+  combosPromocion       ComboPromocion[]
+  recibosCaja           ReciboCaja[]
+  controlDepositos      ControlDepositoDiario[]
+  saldosIniciales       SaldoInicial[]
+  comprobantes          Comprobante[]
+  cajaChicaConfig       CajaChicaConfig?
+  cajaChicaMovimientos  CajaChicaMovimiento[]
+  activosFijos          ActivoFijo[]
+  articulosInventario   ArticuloInventario[]
+  terceros              TerceroBeneficiario[]
+  reglasMora            ReglaMora[]
+  iccmNinos             IccmNino[]
+  iccmRegalos           IccmRegalo[]
+  pagosProveedor        PagoProveedor[]
+  comprobanteContadores ComprobanteContadorMensual[]
+  cierresContables      CierreContable[]
+  cierresAnuales        CierreAnual[]
+  empleados             Empleado[]
+  planillasMensuales    PlanillaMensual[]
+
+  @@map("colegios")
+}
+
+model AnioLectivo {
+  id           Int       @id @default(autoincrement())
+  anio         Int       @unique
+  fechaInicio  DateTime? @db.Date @map("fecha_inicio")
+  fechaFin     DateTime? @db.Date @map("fecha_fin")
+  cerrado      Boolean   @default(false)
+
+  secciones                  Seccion[]
+  cargosEstudiante           CargoEstudiante[]
+  estudianteComboPromocion   EstudianteComboPromocion[]
+  saldosIniciales            SaldoInicial[]
+  comprobantes               Comprobante[]
+
+  @@map("anios_lectivos")
+}
+
+model Modalidad {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique @db.VarChar(60) // Educación Preescolar y Primaria, Secundaria Regular, Secundaria Técnica, Cursos Libres, Carreras Técnicas, ICCM
+
+  nivelesAcademicos  NivelAcademico[]
+  estudiantes        Estudiante[]
+  historialModalidad HistorialModalidad[]
+
+  @@map("modalidades")
+}
+
+/// Registra los cambios de modalidad de un estudiante a lo largo del año
+/// (ej. de "Secundaria Técnica" a "Secundaria Regular" a mitad de año por
+/// motivos económicos). `Estudiante.modalidadId` siempre guarda la
+/// modalidad ACTUAL (para inscripciones nuevas y reportes rápidos); esta
+/// tabla es la que consulta el motor de facturación para saber con qué
+/// tarifa/cuenta facturar CADA mes según la modalidad vigente en ese mes
+/// específico -- así los meses ya facturados con la tarifa anterior no
+/// cambian, y los meses restantes sí usan la tarifa nueva automáticamente.
+model HistorialModalidad {
+  id           Int        @id @default(autoincrement())
+  estudianteId Int        @map("estudiante_id")
+  estudiante   Estudiante @relation(fields: [estudianteId], references: [id])
+  modalidadId  Int        @map("modalidad_id")
+  modalidad    Modalidad  @relation(fields: [modalidadId], references: [id])
+  vigenteDesde DateTime   @db.Date @map("vigente_desde")
+  vigenteHasta DateTime?  @db.Date @map("vigente_hasta") // null = sigue vigente
+  motivo       String?
+  creadoEn     DateTime   @default(now()) @map("creado_en")
+
+  @@index([estudianteId, vigenteDesde])
+  @@map("historial_modalidad")
+}
+
+model NivelAcademico {
+  id                Int       @id @default(autoincrement())
+  nombre            String    @db.VarChar(60) // I Nivel, II Nivel, III Nivel, 1ro...6to, Secundaria, Cursos Libres, Carrera Técnica X
+  modalidadId       Int       @map("modalidad_id")
+  modalidad         Modalidad @relation(fields: [modalidadId], references: [id])
+  orden             Int       @default(0)
+  esNivelGraduacion Boolean   @default(false) @map("es_nivel_graduacion")
+
+  secciones       Seccion[]
+  estudiantes     Estudiante[]
+  combosPromocion ComboPromocion[]
+
+  @@unique([nombre, modalidadId])
+  @@map("niveles_academicos")
+}
+
+model Seccion {
+  id               Int            @id @default(autoincrement())
+  colegioId        Int            @map("colegio_id")
+  colegio          Colegio        @relation(fields: [colegioId], references: [id])
+  nivelAcademicoId Int            @map("nivel_academico_id")
+  nivelAcademico   NivelAcademico @relation(fields: [nivelAcademicoId], references: [id])
+  anioLectivoId    Int            @map("anio_lectivo_id")
+  anioLectivo      AnioLectivo    @relation(fields: [anioLectivoId], references: [id])
+  nombreSeccion    String         @db.VarChar(20) @map("nombre_seccion") // "A", "B", "Única"
+  docenteGuia      String?        @map("docente_guia")
+
+  estudiantes Estudiante[]
+
+  @@unique([colegioId, nivelAcademicoId, anioLectivoId, nombreSeccion])
+  @@map("secciones")
+}
+
+model ConceptoArancel {
+  id                   Int            @id @default(autoincrement())
+  nombre               String         @unique @db.VarChar(80) // Matrícula, Mensualidad, Papelería, Décimo Tercer Mes, etc.
+  cuentaContableId     Int            @map("cuenta_contable_id")
+  cuentaContable       CatalogoCuenta @relation(fields: [cuentaContableId], references: [id])
+  esRecurrenteMensual  Boolean        @default(false) @map("es_recurrente_mensual")
+  aplicaRecargoMora    Boolean        @default(false) @map("aplica_recargo_mora")
+
+  cargosEstudiante  CargoEstudiante[]
+  recibosDetalle    ReciboDetalle[]
+  tiposBecaAplicables TipoBeca[]
+
+  @@map("conceptos_arancel")
+}
+
+model TasaCambio {
+  id            Int      @id @default(autoincrement())
+  fecha         DateTime @unique @db.Date
+  valorCPorUsd  Decimal  @db.Decimal(10, 4) @map("valor_c_por_usd")
+
+  @@map("tasas_cambio")
+}
+
+model ReglaMora {
+  id                  Int       @id @default(autoincrement())
+  colegioId           Int?      @map("colegio_id") // null = regla global para todos los colegios
+  colegio             Colegio?  @relation(fields: [colegioId], references: [id])
+  diaLimitePago       Int       @default(5) @map("dia_limite_pago")
+  porcentajeRecargo   Decimal   @default(10.00) @db.Decimal(5, 2) @map("porcentaje_recargo")
+  vigenteDesde        DateTime  @db.Date @map("vigente_desde")
+
+  @@map("reglas_mora")
+}
+
+// ============================================================================
+// 2. ESTUDIANTES Y BECAS
+// ============================================================================
+
+model Estudiante {
+  id                   Int             @id @default(autoincrement())
+  colegioId            Int             @map("colegio_id")
+  colegio              Colegio         @relation(fields: [colegioId], references: [id])
+  codigoEstudiantil    String          @db.VarChar(20) @map("codigo_estudiantil") // CMLM-2026-001
+  nombreCompleto       String          @db.VarChar(150) @map("nombre_completo")
+  nivelAcademicoId     Int             @map("nivel_academico_id")
+  nivelAcademico       NivelAcademico  @relation(fields: [nivelAcademicoId], references: [id])
+  seccionId            Int?            @map("seccion_id")
+  seccion              Seccion?        @relation(fields: [seccionId], references: [id])
+  modalidadId          Int             @map("modalidad_id")
+  modalidad            Modalidad       @relation(fields: [modalidadId], references: [id])
+  codigoMined          String?         @map("codigo_mined")
+  codigoInatec         String?         @map("codigo_inatec")
+  nombreTutor          String          @db.VarChar(150) @map("nombre_tutor")
+  cedulaTutor          String?         @map("cedula_tutor")
+  telefonoTutor        String?         @map("telefono_tutor")
+  direccion            String?
+  correo               String?
+  programa             String?         // ej. "ICCM"
+  /// "Ficha dinámica": estos 4 montos se fijan al inscribir o promover al
+  /// alumno y son la fuente para TODOS los cargos que se le generen (becas
+  /// completas, medias becas, tarifas de cupos ICCM, etc. se reflejan aquí
+  /// directamente, no como una fórmula aparte).
+  montoMatriculaBase     Decimal       @db.Decimal(12, 2) @map("monto_matricula_base")
+  montoMensualidadBase   Decimal       @db.Decimal(12, 2) @map("monto_mensualidad_base")
+  /// null = usar el mismo monto que Matrícula (así viene en el 99% de los
+  /// casos reales del Excel); se fija aparte solo para la excepción puntual.
+  montoPapeleriaBase     Decimal?      @db.Decimal(12, 2) @map("monto_papeleria_base")
+  /// null = usar el mismo monto que Matrícula.
+  montoDecimoTercerBase  Decimal?      @db.Decimal(12, 2) @map("monto_decimo_tercer_base")
+  /// Código NC del Programa ICCM (ej. "NC100-00118") si el alumno está
+  /// apadrinado -- enlaza su ficha del colegio con su ficha de patrocinio.
+  codigoIccm             String?       @unique @map("codigo_iccm")
+  fechaIngreso           DateTime?     @db.Date @map("fecha_ingreso")
+  activo                 Boolean       @default(true)
+
+  becas                     EstudianteBeca[]
+  cargos                    CargoEstudiante[]
+  recibosCaja               ReciboCaja[]
+  combosPromocion           EstudianteComboPromocion[]
+  recorridoEstudiantil      RecorridoEstudiantil[]
+  mensajesWhatsapp          MensajeCobranzaWhatsapp[]
+  movimientosInventario     MovimientoInventario[]
+  historialModalidad        HistorialModalidad[]
+  iccmNino                  IccmNino?
+
+  @@unique([colegioId, codigoEstudiantil])
+  @@map("estudiantes")
+}
+
+enum TipoCalculoBeca {
+  PORCENTAJE
+  MONTO_FIJO
+}
+
+model TipoBeca {
+  id                 Int              @id @default(autoincrement())
+  nombre             String           @db.VarChar(60) // Media Beca, Beca Interna 100%, Exoneración Papelería...
+  tipoCalculo        TipoCalculoBeca  @map("tipo_calculo")
+  valor              Decimal          @db.Decimal(8, 2) // 50.00 (=50%) o monto en córdobas
+  aplicaAConceptoId  Int?             @map("aplica_a_concepto_id") // null = aplica a todos los conceptos recurrentes
+  aplicaAConcepto    ConceptoArancel? @relation(fields: [aplicaAConceptoId], references: [id])
+
+  estudianteBecas EstudianteBeca[]
+
+  @@map("tipos_beca")
+}
+
+model EstudianteBeca {
+  id              Int        @id @default(autoincrement())
+  estudianteId    Int        @map("estudiante_id")
+  estudiante      Estudiante @relation(fields: [estudianteId], references: [id])
+  tipoBecaId      Int        @map("tipo_beca_id")
+  tipoBeca        TipoBeca   @relation(fields: [tipoBecaId], references: [id])
+  fechaInicio     DateTime   @db.Date @map("fecha_inicio")
+  fechaFin        DateTime?  @db.Date @map("fecha_fin") // null = vigente
+  autorizadoPor   String?    @map("autorizado_por")
+  observacion     String?
+
+  cargosEstudiante CargoEstudiante[]
+
+  @@map("estudiante_becas")
+}
+
+// ============================================================================
+// 3. FACTURACIÓN / INGRESOS RECURRENTES
+// ============================================================================
+
+enum EstadoCargo {
+  PENDIENTE
+  PARCIAL
+  PAGADO
+  VENCIDO
+}
+
+model CargoEstudiante {
+  id                        BigInt           @id @default(autoincrement())
+  estudianteId              Int              @map("estudiante_id")
+  estudiante                Estudiante       @relation(fields: [estudianteId], references: [id])
+  conceptoId                Int              @map("concepto_id")
+  concepto                  ConceptoArancel  @relation(fields: [conceptoId], references: [id])
+  anioLectivoId             Int              @map("anio_lectivo_id")
+  anioLectivo               AnioLectivo      @relation(fields: [anioLectivoId], references: [id])
+  mes                       Int?             // 1-12 para conceptos mensuales; null para Matrícula/Papelería/Décimo Tercero
+  montoOriginal             Decimal          @db.Decimal(12, 2) @map("monto_original")
+  becaAplicadaId            Int?             @map("beca_aplicada_id")
+  becaAplicada              EstudianteBeca?  @relation(fields: [becaAplicadaId], references: [id])
+  montoFacturado            Decimal          @db.Decimal(12, 2) @map("monto_facturado")
+  fechaVencimiento          DateTime         @db.Date @map("fecha_vencimiento")
+  recargoMoraPctAplicado    Decimal?         @db.Decimal(5, 2) @map("recargo_mora_pct_aplicado")
+  recargoMoraMonto          Decimal          @default(0) @db.Decimal(12, 2) @map("recargo_mora_monto")
+  montoPagadoAcumulado      Decimal          @default(0) @db.Decimal(12, 2) @map("monto_pagado_acumulado")
+  saldoPendiente            Decimal          @db.Decimal(12, 2) @map("saldo_pendiente")
+  estado                    EstadoCargo      @default(PENDIENTE)
+  creadoEn                  DateTime         @default(now()) @map("creado_en")
+
+  recibosDetalle            ReciboDetalle[]
+  comboPromocionAsignado    EstudianteComboPromocion?
+
+  @@unique([estudianteId, conceptoId, anioLectivoId, mes])
+  @@index([estudianteId, estado])
+  @@map("cargos_estudiante")
+}
+
+model ComboPromocion {
+  id               Int            @id @default(autoincrement())
+  colegioId        Int            @map("colegio_id")
+  colegio          Colegio        @relation(fields: [colegioId], references: [id])
+  nivelAcademicoId Int            @map("nivel_academico_id") // nivel que gradúa (III Nivel, 6to grado...)
+  nivelAcademico   NivelAcademico @relation(fields: [nivelAcademicoId], references: [id])
+  nombre           String         @db.VarChar(30) // Combo 1...6
+  incluye          String?        // "Toga, Birrete, Porta Diploma, Fotos..."
+  costoTotal       Decimal        @db.Decimal(12, 2) @map("costo_total")
+
+  asignaciones EstudianteComboPromocion[]
+
+  @@map("combos_promocion")
+}
+
+model EstudianteComboPromocion {
+  id                  Int              @id @default(autoincrement())
+  estudianteId        Int              @map("estudiante_id")
+  estudiante          Estudiante       @relation(fields: [estudianteId], references: [id])
+  comboId             Int              @map("combo_id")
+  combo               ComboPromocion   @relation(fields: [comboId], references: [id])
+  anioLectivoId       Int              @map("anio_lectivo_id")
+  anioLectivo         AnioLectivo      @relation(fields: [anioLectivoId], references: [id])
+  fechaAsignacion     DateTime         @db.Date @map("fecha_asignacion")
+  cargoEstudianteId   BigInt?          @unique @map("cargo_estudiante_id") // el cargo generado (concepto = Ingresos por Promoción)
+  cargoEstudiante     CargoEstudiante? @relation(fields: [cargoEstudianteId], references: [id])
+
+  @@map("estudiante_combo_promocion")
+}
+
+enum TipoServicioTransporte {
+  IDA_Y_VUELTA
+  SOLO_IDA
+  SOLO_VUELTA
+  NO_APLICA
+}
+
+model RecorridoEstudiantil {
+  id             Int                    @id @default(autoincrement())
+  estudianteId   Int                    @map("estudiante_id")
+  estudiante     Estudiante             @relation(fields: [estudianteId], references: [id])
+  tipoServicio   TipoServicioTransporte @map("tipo_servicio")
+  tarifaMensual  Decimal                @db.Decimal(12, 2) @map("tarifa_mensual")
+  vigenteDesde   DateTime               @db.Date @map("vigente_desde")
+  vigenteHasta   DateTime?              @db.Date @map("vigente_hasta")
+
+  @@map("recorrido_estudiantil")
+}
+
+// ============================================================================
+// 4. COBROS Y CAJA
+// ============================================================================
+
+enum FormaPago {
+  EFECTIVO
+  TRANSFERENCIA
+  TARJETA
+}
+
+model ReciboCaja {
+  id           BigInt      @id @default(autoincrement())
+  colegioId    Int         @map("colegio_id")
+  colegio      Colegio     @relation(fields: [colegioId], references: [id])
+  numeroRoc    String      @map("numero_roc")
+  fecha        DateTime    @db.Date
+  estudianteId Int?        @map("estudiante_id")
+  estudiante   Estudiante? @relation(fields: [estudianteId], references: [id])
+  montoTotal   Decimal     @db.Decimal(12, 2) @map("monto_total")
+  formaPago    FormaPago   @default(EFECTIVO) @map("forma_pago")
+  observacion  String?
+  anulado      Boolean     @default(false)
+  creadoPor    String?     @map("creado_por")
+  creadoEn     DateTime    @default(now()) @map("creado_en")
+
+  detalle ReciboDetalle[]
+
+  @@unique([colegioId, numeroRoc])
+  @@map("recibos_caja")
+}
+
+model ReciboDetalle {
+  id                  BigInt           @id @default(autoincrement())
+  reciboId            BigInt           @map("recibo_id")
+  recibo              ReciboCaja       @relation(fields: [reciboId], references: [id])
+  cargoEstudianteId   BigInt?          @map("cargo_estudiante_id")
+  cargoEstudiante     CargoEstudiante? @relation(fields: [cargoEstudianteId], references: [id])
+  conceptoId          Int              @map("concepto_id")
+  concepto            ConceptoArancel  @relation(fields: [conceptoId], references: [id])
+  montoPagado         Decimal          @db.Decimal(12, 2) @map("monto_pagado")
+  incluyeRecargoMora  Decimal          @default(0) @db.Decimal(12, 2) @map("incluye_recargo_mora")
+  cuentaContableId    Int              @map("cuenta_contable_id")
+  cuentaContable      CatalogoCuenta   @relation(fields: [cuentaContableId], references: [id])
+  /// El asiento de partida doble que este pago generó automáticamente
+  /// (Débito Caja / Crédito la cuenta que corresponda). Lo llena la Pantalla
+  /// de Cajera en la misma transacción que crea este renglón.
+  comprobanteId       BigInt?          @map("comprobante_id")
+  comprobante         Comprobante?     @relation(fields: [comprobanteId], references: [id])
+  /// true si este pago se contabilizó contra el pasivo 2110 (Ingresos
+  /// Recibidos por Anticipado) por ser un abono a un año lectivo futuro.
+  esAnticipo          Boolean          @default(false) @map("es_anticipo")
+  /// true una vez que el job del 01 de enero ya trasladó este anticipo del
+  /// pasivo 2110 al ingreso real. Evita regularizar el mismo pago dos veces.
+  regularizado        Boolean          @default(false)
+
+  movimientoInventario MovimientoInventario?
+
+  @@map("recibo_detalle")
+}
+
+model ControlDepositoDiario {
+  id                  Int      @id @default(autoincrement())
+  colegioId           Int      @map("colegio_id")
+  colegio             Colegio  @relation(fields: [colegioId], references: [id])
+  fecha               DateTime @db.Date
+  totalIngresosDia    Decimal  @db.Decimal(12, 2) @map("total_ingresos_dia")
+  efectivoDepositado  Decimal  @db.Decimal(12, 2) @map("efectivo_depositado")
+  banco               String?
+  noBoleta            String?  @map("no_boleta")
+  diferencia          Decimal  @db.Decimal(12, 2)
+  entregadoPor        String?  @map("entregado_por")
+  recibidoPor         String?  @map("recibido_por")
+  observaciones       String?
+
+  @@unique([colegioId, fecha])
+  @@map("control_depositos_diarios")
+}
+
+model MensajeCobranzaWhatsapp {
+  id                       BigInt     @id @default(autoincrement())
+  estudianteId             Int        @map("estudiante_id")
+  estudiante               Estudiante @relation(fields: [estudianteId], references: [id])
+  fechaGenerado            DateTime   @default(now()) @map("fecha_generado")
+  saldoAlMomento           Decimal    @db.Decimal(12, 2) @map("saldo_al_momento")
+  detalleMesesPendientes   String?    @map("detalle_meses_pendientes")
+  mensajeTexto             String     @map("mensaje_texto")
+  enviado                  Boolean    @default(false)
+  fechaEnvio               DateTime?  @map("fecha_envio")
+
+  @@map("mensajes_cobranza_whatsapp")
+}
+
+// ============================================================================
+// 5. CONTABILIDAD FORMAL (PARTIDA DOBLE)
+// ============================================================================
+
+enum TipoCuentaContable {
+  MAYOR   // agrupadora, no recibe asientos
+  DETALLE // transaccional
+}
+
+enum ClaseCuenta {
+  ACTIVO
+  PASIVO
+  PATRIMONIO
+  INGRESO
+  COSTO
+  GASTO
+  CIERRE
+  ORDEN_DEUDORA
+  ORDEN_ACREEDORA
+}
+
+enum NaturalezaCuenta {
+  DEUDORA
+  ACREEDORA
+}
+
+model CatalogoCuenta {
+  id             Int                @id @default(autoincrement())
+  /// El código YA NO es único por sí solo -- es único DENTRO de cada libro
+  /// (ver `LibroContable`). Dos libros distintos pueden tener, por ejemplo,
+  /// ambos un código "110101 Caja General" que son cuentas completamente
+  /// distintas (la caja del colegio vs. la caja del Programa ICCM).
+  libro          LibroContable      @default(COLEGIO)
+  codigo         String             @db.VarChar(15)
+  nombre         String             @db.VarChar(150)
+  cuentaPadreId  Int?               @map("cuenta_padre_id")
+  cuentaPadre    CatalogoCuenta?    @relation("CuentaJerarquia", fields: [cuentaPadreId], references: [id])
+  hijos          CatalogoCuenta[]   @relation("CuentaJerarquia")
+  tipoCuenta     TipoCuentaContable @map("tipo_cuenta")
+  clase          ClaseCuenta
+  naturaleza     NaturalezaCuenta
+  nivel          Int
+  activo         Boolean            @default(true) // false = código reservado/sin nombrar aún en el Excel origen
+
+  conceptosArancel        ConceptoArancel[]
+  recibosDetalle          ReciboDetalle[]
+  saldosIniciales         SaldoInicial[]
+  asientosContables       AsientoContable[]
+  cajaChicaMovimientos    CajaChicaMovimiento[]
+  terceroDebito           TerceroBeneficiario[] @relation("CuentaDebitoFrecuente")
+  terceroCredito          TerceroBeneficiario[] @relation("CuentaCreditoFrecuente")
+  categoriaActivoCuenta   CategoriaActivo[]     @relation("CategoriaCuentaActivo")
+  categoriaDeprecAcum     CategoriaActivo[]     @relation("CategoriaCuentaDeprecAcumulada")
+  categoriaGasto          CategoriaActivo[]     @relation("CategoriaCuentaGasto")
+  pagoProveedorDetalle    PagoProveedorDetalle[]
+  pagosProveedorOrigen    PagoProveedor[]       @relation("CuentaOrigenPago")
+  pagosProveedorRetencion PagoProveedor[]       @relation("CuentaRetencionPago")
+
+  @@unique([libro, codigo])
+  @@map("catalogo_cuentas")
+}
+
+model TerceroBeneficiario {
+  id                        Int             @id @default(autoincrement())
+  colegioId                 Int?            @map("colegio_id") // null = compartido entre colegios
+  colegio                   Colegio?        @relation(fields: [colegioId], references: [id])
+  nombreCompleto            String          @map("nombre_completo")
+  nombreComercial           String?         @map("nombre_comercial")
+  rucCedula                 String?         @map("ruc_cedula")
+  correo                    String?
+  telefono                  String?
+  conceptoFrecuente         String?         @map("concepto_frecuente")
+  cuentaDebitoFrecId        Int?            @map("cuenta_debito_frec_id")
+  cuentaDebitoFrec          CatalogoCuenta? @relation("CuentaDebitoFrecuente", fields: [cuentaDebitoFrecId], references: [id])
+  cuentaCreditoFrecId       Int?            @map("cuenta_credito_frec_id")
+  cuentaCreditoFrec         CatalogoCuenta? @relation("CuentaCreditoFrecuente", fields: [cuentaCreditoFrecId], references: [id])
+  /// Módulo de Pago (punto 7 de la especificación de Eduardo, 7 sept 2026):
+  /// true = el proveedor tiene una "constancia de no retención" vigente de
+  /// la DGI -- se le exonera de TODA retención mientras la constancia no
+  /// venza. false/sin fecha = se le retiene según la regla normal (2%/10%).
+  tieneConstanciaNoRetencion Boolean        @default(false) @map("tiene_constancia_no_retencion")
+  /// Fecha de vencimiento de esa constancia. Si es null pero
+  /// `tieneConstanciaNoRetencion=true`, se trata como vigente indefinidamente
+  /// (avisar a Eduardo para que confirme fecha real cuando la tenga).
+  constanciaVigenciaHasta    DateTime?      @db.Date @map("constancia_vigencia_hasta")
+
+  comprobantes           Comprobante[]
+  movimientosInventario  MovimientoInventario[]
+  pagosProveedor         PagoProveedor[]
+
+  @@map("terceros_beneficiarios")
+}
+
+model SaldoInicial {
+  id             Int            @id @default(autoincrement())
+  colegioId      Int            @map("colegio_id")
+  colegio        Colegio        @relation(fields: [colegioId], references: [id])
+  cuentaId       Int            @map("cuenta_id")
+  cuenta         CatalogoCuenta @relation(fields: [cuentaId], references: [id])
+  anioLectivoId  Int            @map("anio_lectivo_id")
+  anioLectivo    AnioLectivo    @relation(fields: [anioLectivoId], references: [id])
+  debeInicial    Decimal        @default(0) @db.Decimal(14, 2) @map("debe_inicial")
+  haberInicial   Decimal        @default(0) @db.Decimal(14, 2) @map("haber_inicial")
+
+  @@unique([colegioId, cuentaId, anioLectivoId])
+  @@map("saldos_iniciales")
+}
+
+enum TipoComprobante {
+  REC    // recaudación automática
+  CD     // comprobante de diario
+  CK     // comprobante de cheque
+  CIERRE // asiento de cierre (depreciación, ajustes)
+}
+
+enum OrigenComprobante {
+  MANUAL
+  AUTO_RECAUDACION
+  AUTO_DEPRECIACION
+  AUTO_CIERRE
+  /// Cobro de un arancel del año lectivo SIGUIENTE recibido en el año
+  /// actual (ej. matrícula anticipada) -- se contabiliza contra el pasivo
+  /// 2110 "Ingresos Recibidos por Anticipado" en vez de contra el ingreso.
+  AUTO_ANTICIPO
+  /// Asiento masivo del 01 de enero que traslada el pasivo 2110 al ingreso
+  /// real, una vez que el año lectivo que se anticipó ya inició.
+  AUTO_REGULARIZACION_ANTICIPO
+  /// Libro ICCM: ingreso de un patrocinio/donación mensual o un regalo.
+  AUTO_ICCM_INGRESO
+  /// Libro ICCM: comisión bancaria (BAC Nicaragua o comisión internacional).
+  AUTO_ICCM_COMISION
+  /// Libro ICCM: liberación de fondos que estaban retenidos por foto/carta
+  /// atrasada, una vez que el estudiante deja de estar retenido.
+  AUTO_ICCM_LIBERACION
+  /// Comprobante migrado desde un Excel histórico (ver
+  /// scripts/importar-historico-iccm.ts) -- no lo generó el sistema en
+  /// tiempo real, se trasladó tal cual del libro diario original.
+  IMPORTACION_HISTORICA
+  /// Módulo de Pago a Proveedores (7 sept 2026): pago generado por
+  /// `registrarPagoProveedor()` -- amarra automáticamente Caja/Banco,
+  /// Retenciones por Pagar y la(s) cuenta(s) de gasto elegidas.
+  AUTO_PAGO_PROVEEDOR
+  /// Asiento de nómina generado por el Módulo de Nóminas.
+  AUTO_NOMINA
+}
+
+enum EstadoComprobante {
+  CUADRADO
+  DESCUADRADO
+}
+
+model Comprobante {
+  id                  BigInt              @id @default(autoincrement())
+  colegioId           Int                 @map("colegio_id")
+  colegio             Colegio             @relation(fields: [colegioId], references: [id])
+  /// A qué "empresa"/libro pertenece este comprobante -- ver `LibroContable`.
+  /// La numeración de `claveComprobante` es independiente por libro.
+  libro               LibroContable       @default(COLEGIO)
+  tipoComprobante     TipoComprobante     @map("tipo_comprobante")
+  numeroComprobante   Int                 @map("numero_comprobante")
+  claveComprobante    String              @map("clave_comprobante") // tipo + '-' + numero
+  fecha               DateTime            @db.Date
+  concepto            String?
+  beneficiarioId      Int?                @map("beneficiario_id")
+  beneficiario        TerceroBeneficiario? @relation(fields: [beneficiarioId], references: [id])
+  noDocumento         String?             @map("no_documento")
+  noCheque            String?             @map("no_cheque")
+  anioLectivoId       Int                 @map("anio_lectivo_id")
+  anioLectivo         AnioLectivo         @relation(fields: [anioLectivoId], references: [id])
+  mes                 Int
+  origen              OrigenComprobante   @default(MANUAL)
+  estado              EstadoComprobante   @default(CUADRADO)
+  creadoEn            DateTime            @default(now()) @map("creado_en")
+
+  asientos              AsientoContable[]
+  depreciacionesMes     DepreciacionMensual[]
+  cajaChicaReembolsos   CajaChicaMovimiento[]
+  recibosDetalleGenerados ReciboDetalle[]
+  iccmAsignaciones        IccmAsignacionMensual[]  @relation("IccmAsignacionComprobante")
+  iccmRegalos             IccmRegalo[]             @relation("IccmRegaloComprobante")
+  iccmAjustes             IccmAjusteMensual[]      @relation("IccmAjusteComprobante")
+  iccmConciliacionesComision IccmConciliacionMensual[] @relation("IccmComisionComprobante")
+  pagoProveedor              PagoProveedor?
+  cierresAnuales             CierreAnual[]             @relation("CierreAnualComprobante")
+  planillasMensuales         PlanillaMensual[]         @relation("PlanillaComprobante")
+
+  @@unique([colegioId, libro, claveComprobante])
+  @@map("comprobantes")
+}
+
+enum TipoMovimientoContable {
+  DEBITO
+  CREDITO
+}
+
+enum Moneda {
+  NIO
+  USD
+}
+
+model AsientoContable {
+  id                  BigInt                 @id @default(autoincrement())
+  comprobanteId       BigInt                 @map("comprobante_id")
+  comprobante         Comprobante            @relation(fields: [comprobanteId], references: [id])
+  numeroLinea         Int                    @map("numero_linea")
+  cuentaId            Int                    @map("cuenta_id") // debe ser una cuenta tipo DETALLE
+  cuenta              CatalogoCuenta         @relation(fields: [cuentaId], references: [id])
+  movimiento          TipoMovimientoContable
+  moneda              Moneda                 @default(NIO)
+  tasaCambio          Decimal                @default(1) @db.Decimal(10, 4) @map("tasa_cambio")
+  montoMonedaOrigen   Decimal                @db.Decimal(14, 2) @map("monto_moneda_origen")
+  debitoC             Decimal                @default(0) @db.Decimal(14, 2) @map("debito_c")
+  creditoC            Decimal                @default(0) @db.Decimal(14, 2) @map("credito_c")
+
+  @@index([comprobanteId])
+  @@index([cuentaId])
+  @@map("asientos_contables")
+}
+
+// ============================================================================
+// 6. CAJA CHICA
+// ============================================================================
+
+model CajaChicaConfig {
+  id                     Int     @id @default(autoincrement())
+  colegioId              Int     @unique @map("colegio_id")
+  colegio                Colegio @relation(fields: [colegioId], references: [id])
+  fondoFijoAutorizado    Decimal @db.Decimal(12, 2) @map("fondo_fijo_autorizado")
+  custodio               String?
+
+  @@map("caja_chica_config")
+}
+
+enum EstadoCajaChica {
+  PENDIENTE
+  REEMBOLSADO
+}
+
+model CajaChicaMovimiento {
+  id                       Int             @id @default(autoincrement())
+  colegioId                Int             @map("colegio_id")
+  colegio                  Colegio         @relation(fields: [colegioId], references: [id])
+  fecha                    DateTime        @db.Date
+  noVale                   String?         @map("no_vale")
+  concepto                 String
+  cuentaGastoId            Int             @map("cuenta_gasto_id")
+  cuentaGasto              CatalogoCuenta  @relation(fields: [cuentaGastoId], references: [id])
+  monto                    Decimal         @db.Decimal(12, 2)
+  estado                   EstadoCajaChica @default(PENDIENTE)
+  comprobanteReembolsoId   BigInt?         @map("comprobante_reembolso_id")
+  comprobanteReembolso     Comprobante?    @relation(fields: [comprobanteReembolsoId], references: [id])
+
+  @@map("caja_chica_movimientos")
+}
+
+// ============================================================================
+// 7. ACTIVOS FIJOS Y DEPRECIACIÓN
+// ============================================================================
+
+model CategoriaActivo {
+  id                        Int             @id @default(autoincrement())
+  nombre                    String          @unique
+  vidaUtilAnios             Int             @map("vida_util_anios")
+  cuentaActivoId            Int             @map("cuenta_activo_id")
+  cuentaActivo              CatalogoCuenta  @relation("CategoriaCuentaActivo", fields: [cuentaActivoId], references: [id])
+  cuentaDeprecAcumuladaId   Int             @map("cuenta_deprec_acumulada_id")
+  cuentaDeprecAcumulada     CatalogoCuenta  @relation("CategoriaCuentaDeprecAcumulada", fields: [cuentaDeprecAcumuladaId], references: [id])
+  cuentaGastoId             Int             @map("cuenta_gasto_id")
+  cuentaGasto               CatalogoCuenta  @relation("CategoriaCuentaGasto", fields: [cuentaGastoId], references: [id])
+
+  activosFijos ActivoFijo[]
+
+  @@map("categorias_activo")
+}
+
+enum EstadoActivo {
+  ACTIVO
+  RETIRADO
+  VENDIDO
+}
+
+model ActivoFijo {
+  id                        Int             @id @default(autoincrement())
+  colegioId                 Int             @map("colegio_id")
+  colegio                   Colegio         @relation(fields: [colegioId], references: [id])
+  nombreActivo              String          @map("nombre_activo")
+  categoriaId               Int             @map("categoria_id")
+  categoria                 CategoriaActivo @relation(fields: [categoriaId], references: [id])
+  fechaAdquisicion          DateTime        @db.Date @map("fecha_adquisicion")
+  fechaInicioDepreciacion   DateTime        @db.Date @map("fecha_inicio_depreciacion")
+  costoAdquisicion          Decimal         @db.Decimal(14, 2) @map("costo_adquisicion")
+  vidaUtilMesesOverride      Int?           @map("vida_util_meses_override")
+  estado                    EstadoActivo    @default(ACTIVO)
+
+  depreciaciones DepreciacionMensual[]
+
+  @@map("activos_fijos")
+}
+
+model DepreciacionMensual {
+  id                       BigInt        @id @default(autoincrement())
+  activoId                 Int           @map("activo_id")
+  activo                   ActivoFijo    @relation(fields: [activoId], references: [id])
+  anio                     Int
+  mes                      Int
+  depreciacionDelMes       Decimal       @db.Decimal(12, 2) @map("depreciacion_del_mes")
+  depreciacionAcumulada    Decimal       @db.Decimal(14, 2) @map("depreciacion_acumulada")
+  valorEnLibros            Decimal       @db.Decimal(14, 2) @map("valor_en_libros")
+  comprobanteId            BigInt?       @map("comprobante_id")
+  comprobante              Comprobante?  @relation(fields: [comprobanteId], references: [id])
+
+  @@unique([activoId, anio, mes])
+  @@map("depreciacion_mensual")
+}
+
+// ============================================================================
+// 8. INVENTARIO — KARDEX DE UNIFORMES
+// ============================================================================
+
+enum CategoriaUniforme {
+  UNIFORME_ESCOLAR
+  UNIFORME_DEPORTIVO
+}
+
+model ArticuloInventario {
+  id                    Int               @id @default(autoincrement())
+  colegioId             Int               @map("colegio_id")
+  colegio               Colegio           @relation(fields: [colegioId], references: [id])
+  categoria             CategoriaUniforme
+  tipoPrenda            String            @map("tipo_prenda")
+  genero                String
+  talla                 String
+  codigo                String            // autogenerado: categoría-tipo-género-talla
+  puntoReorden          Int               @default(0) @map("punto_reorden")
+  costoPromedioActual   Decimal           @default(0) @db.Decimal(12, 2) @map("costo_promedio_actual")
+  existenciaActual      Int               @default(0) @map("existencia_actual")
+
+  movimientos MovimientoInventario[]
+
+  @@unique([colegioId, codigo])
+  @@map("articulos_inventario")
+}
+
+enum TipoMovimientoInventario {
+  ENTRADA
+  SALIDA
+}
+
+model MovimientoInventario {
+  id                      BigInt                   @id @default(autoincrement())
+  articuloId              Int                      @map("articulo_id")
+  articulo                ArticuloInventario       @relation(fields: [articuloId], references: [id])
+  fecha                   DateTime                 @db.Date
+  tipoMovimiento          TipoMovimientoInventario @map("tipo_movimiento")
+  cantidad                Int
+  costoUnitarioCompra     Decimal?                 @db.Decimal(12, 2) @map("costo_unitario_compra")
+  precioVentaUnitario     Decimal?                 @db.Decimal(12, 2) @map("precio_venta_unitario")
+  estudianteId            Int?                     @map("estudiante_id")
+  estudiante              Estudiante?              @relation(fields: [estudianteId], references: [id])
+  proveedorId             Int?                     @map("proveedor_id")
+  proveedor               TerceroBeneficiario?     @relation(fields: [proveedorId], references: [id])
+  reciboDetalleId         BigInt?                  @unique @map("recibo_detalle_id")
+  reciboDetalle           ReciboDetalle?           @relation(fields: [reciboDetalleId], references: [id])
+  noDocumento             String?                  @map("no_documento")
+  observaciones           String?
+
+  @@map("movimientos_inventario")
+}
+
+// ============================================================================
+// 9. PROGRAMA ICCM (Apadrinamiento / Sponsorship) -- Libro contable "ICCM"
+// ============================================================================
+// Fuente: Sistema_Contable_ICCM_2026.xlsm + Apadrinamientos_Consolidado_2026.xlsx
+//
+// El Programa ICCM es una "empresa" contable aparte del colegio: recibe
+// patrocinios en dólares desde FMC-USA y los reporta/entrega mes a mes a
+// los 3 colegios. Comparte el mismo motor de Comprobante/AsientoContable,
+// pero con su PROPIO catálogo de cuentas (libro = ICCM) para no mezclarse
+// con la contabilidad en córdobas de cada colegio.
+
+enum EstadoNinoIccm {
+  ACTIVO // tiene patrocinador asignado actualmente
+  EN_ESPERA // sin patrocinador (nunca tuvo, o quedó libre)
+  DE_BAJA
+}
+
+model IccmNino {
+  id                 Int            @id @default(autoincrement())
+  /// Código único que asigna ICCM, ej. "NC100-00118" (el prefijo NC100/
+  /// NC200/NC300 indica el colegio -- ver `Colegio.prefijoIccm`).
+  codigoNc           String         @unique @map("codigo_nc")
+  colegioId          Int            @map("colegio_id")
+  colegio            Colegio        @relation(fields: [colegioId], references: [id])
+  /// Enlace opcional a su ficha como estudiante del colegio (no todos los
+  /// niños patrocinados tienen todavía su código de estudiante cargado).
+  estudianteId       Int?           @unique @map("estudiante_id")
+  estudiante         Estudiante?    @relation(fields: [estudianteId], references: [id])
+  nombreCompleto     String         @map("nombre_completo")
+  /// Nombre del padrino/patrocinador tal como aparece en los reportes de
+  /// FMC-USA (solo texto informativo, no se guardan más datos personales
+  /// de él por ahora).
+  patrocinadorNombre String?        @map("patrocinador_nombre")
+  cuotaMensualUsd    Decimal        @db.Decimal(10, 2) @map("cuota_mensual_usd")
+  estado             EstadoNinoIccm @default(ACTIVO)
+
+  asignacionesMensuales IccmAsignacionMensual[]
+  regalos               IccmRegalo[]
+
+  @@map("iccm_ninos")
+}
+
+/// Un renglón por niño por mes: cuánto le correspondía y si ese mes estuvo
+/// retenido. Viene directamente del "Disbursement Advice" / reporte
+/// "On Time or Overdue" mensual de ICCM -- no se calcula, se importa.
+/// Refleja los 3 valores reales que trae la columna "Retenido este mes" del
+/// libro de Apadrinamientos -- desde 2024 ICCM reporta explícitamente un
+/// tercer estado ("Sin dato") además de Sí/No, y NO se debe forzar a
+/// verdadero/falso: Eduardo pidió (7 sept 2026) dejarlo tal cual está
+/// reportado y verificarlo más adelante, en vez de asumir un valor.
+enum EstadoRetencionIccm {
+  RETENIDO
+  NO_RETENIDO
+  SIN_DATO
+}
+
+model IccmAsignacionMensual {
+  id              BigInt              @id @default(autoincrement())
+  ninoId          Int                 @map("nino_id")
+  nino            IccmNino            @relation(fields: [ninoId], references: [id])
+  anio            Int
+  mes             Int
+  /// Monto que le correspondería si NO estuviera retenido.
+  montoBase       Decimal             @db.Decimal(10, 2) @map("monto_base")
+  /// RETENIDO = ese mes el reporte de ICCM marcó al niño con fondos
+  /// retenidos (foto y/o carta vencida) -- se le asigna $0 de ingreso ese
+  /// mes. SIN_DATO = el reporte de origen no trae el dato (aparece desde
+  /// 2024 en el histórico) -- NO se asume retenido ni no-retenido; queda
+  /// marcado así hasta que se verifique con la fuente real.
+  estadoRetencion EstadoRetencionIccm @default(NO_RETENIDO) @map("estado_retencion")
+  /// ej. "Letter", "Photo", "Photo+Letter" (tal como los clasifica ICCM).
+  motivoRetencion String?             @map("motivo_retencion")
+  /// = 0 si `estadoRetencion = RETENIDO`; si no (incluyendo SIN_DATO) =
+  /// `montoBase`, salvo que se trate de un registro histórico importado,
+  /// en cuyo caso se guarda el monto realmente recibido según el Excel de
+  /// origen (no se recalcula). Se guarda ya resuelto para que los reportes
+  /// no tengan que repetir la regla.
+  montoAsignado   Decimal             @db.Decimal(10, 2) @map("monto_asignado")
+  comprobanteId   BigInt?             @map("comprobante_id")
+  comprobante     Comprobante?        @relation("IccmAsignacionComprobante", fields: [comprobanteId], references: [id])
+
+  @@unique([ninoId, anio, mes])
+  @@map("iccm_asignaciones_mensuales")
+}
+
+enum TipoRegaloIccm {
+  CHILD_GIFT // regalo dirigido a un niño específico
+  NON_CHILD_GIFT // donación no ligada a un niño (proyectos, escuela en general)
+}
+
+model IccmRegalo {
+  id            Int            @id @default(autoincrement())
+  ninoId        Int?           @map("nino_id") // null cuando es NON_CHILD_GIFT
+  nino          IccmNino?      @relation(fields: [ninoId], references: [id])
+  colegioId     Int?           @map("colegio_id") // usado cuando ninoId es null
+  colegio       Colegio?       @relation(fields: [colegioId], references: [id])
+  tipo          TipoRegaloIccm
+  fecha         DateTime       @db.Date
+  monto         Decimal        @db.Decimal(10, 2)
+  nota          String?
+  comprobanteId BigInt?        @map("comprobante_id")
+  comprobante   Comprobante?   @relation("IccmRegaloComprobante", fields: [comprobanteId], references: [id])
+
+  @@map("iccm_regalos")
+}
+
+enum TipoAjusteIccm {
+  /// "Release funds": se liberan fondos que habían quedado retenidos en
+  /// meses anteriores (el niño dejó de estar retenido). Viene como una
+  /// línea de una sola vez en el Disbursement Advice, no por niño.
+  RELEASE_FUNDS
+  /// Corrección de un error de un mes previo, reportada por ICCM.
+  CORRECTION
+}
+
+/// Ajustes de una sola vez que reporta ICCM y que NO son atribuibles a un
+/// niño específico (ver Notas y Metodología del libro de Apadrinamientos).
+model IccmAjusteMensual {
+  id            Int            @id @default(autoincrement())
+  anio          Int
+  mes           Int
+  tipo          TipoAjusteIccm
+  monto         Decimal        @db.Decimal(10, 2)
+  descripcion   String?
+  comprobanteId BigInt?        @map("comprobante_id")
+  comprobante   Comprobante?   @relation("IccmAjusteComprobante", fields: [comprobanteId], references: [id])
+
+  @@map("iccm_ajustes_mensuales")
+}
+
+enum EstadoConciliacionIccm {
+  CUADRA
+  REVISAR
+  SIN_DATO
+}
+
+/// Un renglón por mes: compara lo reportado por FMC-USA contra lo que
+/// realmente acreditó el banco, tal como la hoja "Conciliacion bancaria"
+/// del libro de Apadrinamientos. Los depósitos llegan con ~1 mes de
+/// desfase respecto al mes que reportan (ver `mesRecepcionBanco`).
+model IccmConciliacionMensual {
+  id                             Int                    @id @default(autoincrement())
+  anio                           Int
+  mes                            Int
+  totalReportadoFmc              Decimal                @db.Decimal(10, 2) @map("total_reportado_fmc")
+  /// Comisión del banco EXTRANJERO (Estados Unidos) que FMC-USA descuenta
+  /// ANTES de acreditar la transferencia -- variable según el monto que se
+  /// transfiere (Eduardo la ubica alrededor de US$5, pero no es un monto
+  /// fijo garantizado; puede ser 0 algunos meses). Confirmado con Eduardo
+  /// el 7 sept 2026.
+  comisionBancariaInternacional  Decimal                @default(0) @db.Decimal(10, 2) @map("comision_bancaria_internacional")
+  totalEsperadoAcreditado        Decimal                @db.Decimal(10, 2) @map("total_esperado_acreditado")
+  totalRecibidoBanco             Decimal?               @db.Decimal(10, 2) @map("total_recibido_banco")
+  /// Mes calendario en que realmente entró el depósito (normalmente el mes
+  /// siguiente al que se está reportando).
+  mesRecepcionBanco              String?                @map("mes_recepcion_banco")
+  diferencia                     Decimal                @default(0) @db.Decimal(10, 2)
+  estado                         EstadoConciliacionIccm @default(SIN_DATO)
+  /// Comisión del banco NACIONAL (BAC Nicaragua) que se cobra COMO UN
+  /// DÉBITO APARTE Y POSTERIOR en la cuenta -- no afecta el monto
+  /// acreditado, pero sí es un gasto real mensual de la organización.
+  /// CORREGIDO el 7 sept 2026: pese a que una versión anterior del Excel la
+  /// describía como "US$5 fijos", Eduardo confirmó que el monto fijo de
+  /// US$5 corresponde a la comisión del banco EXTRANJERO (arriba) y que
+  /// ESTA comisión nacional ronda los US$25, pero VARÍA según el monto que
+  /// ingresa cada mes -- no tiene un valor fijo real. Por eso no lleva
+  /// @default y se debe informar explícitamente cada mes con el monto que
+  /// muestre el estado de cuenta de BAC.
+  comisionBacNacional            Decimal                @db.Decimal(10, 2) @map("comision_bac_nacional")
+  comisionBacRegistrada          Boolean                @default(false) @map("comision_bac_registrada")
+  comprobanteComisionId          BigInt?                @map("comprobante_comision_id")
+  comprobanteComision            Comprobante?           @relation("IccmComisionComprobante", fields: [comprobanteComisionId], references: [id])
+
+  @@unique([anio, mes])
+  @@map("iccm_conciliaciones_mensuales")
+}
+
+// ============================================================================
+// 10. MÓDULO DE PAGO A PROVEEDORES (Egresos) -- pedido de Eduardo 7 sept 2026
+// ============================================================================
+// Cubre los 11 puntos de la especificación: proveedor, forma de pago,
+// numeración automática (o número de cheque), factura, retención automática
+// (2%/10%), concepto, cuentas de gasto (multi-línea), historial del
+// proveedor, y jornalización automática -- todo en una sola transacción,
+// igual que `procesarPago()` en el módulo de cobros.
+
+/// Cómo salió el dinero. Deliberadamente distinto del `FormaPago` de cobros
+/// (Efectivo/Transferencia/Tarjeta) porque acá Eduardo pidió exactamente
+/// estas 3 opciones para egresos.
+enum FormaPagoProveedor {
+  CAJA_GENERAL
+  TRANSFERENCIA
+  CHEQUE
+}
+
+/// Decide la regla de retención (punto 7): compra o servicio general = 2%
+/// (solo si la factura > C$1,000, calculado ANTES de IVA); servicio
+/// profesional = 10% sobre el monto total del servicio (sin IVA en este
+/// esquema, según lo indicado por Eduardo).
+enum TipoGastoRetencion {
+  COMPRA_O_SERVICIO_GENERAL
+  SERVICIO_PROFESIONAL
+}
+
+/// Contador independiente para la numeración "YY-X-NN" del punto 5 (X=letra
+/// de mes A=enero...L=diciembre, NN reinicia cada mes). Es EL MISMO esquema
+/// que ya usaba el libro diario histórico de ICCM (ej. "H-01"), así que se
+/// reutiliza el patrón que Eduardo ya conoce de sus propios Excel. Solo
+/// aplica a pagos por Caja General o Transferencia -- Cheque usa el número
+/// de cheque tal cual (no consume este contador).
+model ComprobanteContadorMensual {
+  id           Int           @id @default(autoincrement())
+  colegioId    Int           @map("colegio_id")
+  colegio      Colegio       @relation(fields: [colegioId], references: [id])
+  libro        LibroContable @default(COLEGIO)
+  anio         Int
+  mes          Int
+  ultimoNumero Int           @default(0) @map("ultimo_numero")
+
+  @@unique([colegioId, libro, anio, mes])
+  @@map("comprobante_contador_mensual")
+}
+
+model PagoProveedor {
+  id                         BigInt              @id @default(autoincrement())
+  colegioId                  Int                 @map("colegio_id")
+  colegio                    Colegio             @relation(fields: [colegioId], references: [id])
+  libro                      LibroContable       @default(COLEGIO)
+  proveedorId                Int                 @map("proveedor_id")
+  proveedor                  TerceroBeneficiario @relation(fields: [proveedorId], references: [id])
+  fechaPago                  DateTime            @db.Date @map("fecha_pago")
+  formaPago                  FormaPagoProveedor  @map("forma_pago")
+  /// Cuenta de la que sale el dinero: Caja General (110101), o el banco
+  /// específico (ej. 11010301 BAC NIO) para Transferencia/Cheque.
+  cuentaOrigenId             Int                 @map("cuenta_origen_id")
+  cuentaOrigen               CatalogoCuenta      @relation("CuentaOrigenPago", fields: [cuentaOrigenId], references: [id])
+  /// El texto que identifica este pago: "26-A-01" (Caja General/Transferencia,
+  /// generado por `ComprobanteContadorMensual`) o el número de cheque tal
+  /// cual (Cheque) -- ver punto 5 de la especificación.
+  numeroComprobantePago      String              @map("numero_comprobante_pago")
+  numeroFactura              String?             @map("numero_factura")
+  conceptoPago               String              @map("concepto_pago")
+  tipoGasto                  TipoGastoRetencion  @map("tipo_gasto")
+  /// Monto total de la factura (con IVA incluido si aplica).
+  montoFactura               Decimal             @db.Decimal(12, 2) @map("monto_factura")
+  /// Solo relevante para COMPRA_O_SERVICIO_GENERAL: el monto ANTES de IVA
+  /// sobre el que se calcula el 2%. Si es null se usa `montoFactura` completo
+  /// (asume que no hay IVA separado en esa factura).
+  baseImponibleSinIva        Decimal?            @db.Decimal(12, 2) @map("base_imponible_sin_iva")
+  /// true si al momento de este pago el proveedor tenía constancia de no
+  /// retención vigente -- se guarda como "fotografía" del momento, aunque
+  /// después venza o se le quite la constancia.
+  exoneradoPorConstancia     Boolean             @default(false) @map("exonerado_por_constancia")
+  porcentajeRetencionAplicado Decimal            @default(0) @db.Decimal(5, 2) @map("porcentaje_retencion_aplicado")
+  montoRetencion             Decimal             @default(0) @db.Decimal(12, 2) @map("monto_retencion")
+  /// Cuenta DETALLE de retención DGI acreditada -- "21060202 IR Compra De
+  /// Bienes Y Servicios" (2%) o "21060203 IR Servicios Profesionales" (10%)
+  /// según `tipoGasto`. null cuando no hubo retención (exonerado o factura
+  /// bajo el umbral).
+  cuentaRetencionId          Int?                @map("cuenta_retencion_id")
+  cuentaRetencion            CatalogoCuenta?     @relation("CuentaRetencionPago", fields: [cuentaRetencionId], references: [id])
+  /// = montoFactura - montoRetencion. Lo que realmente sale de Caja/Banco.
+  montoNetoPagado            Decimal             @db.Decimal(12, 2) @map("monto_neto_pagado")
+  comprobanteId              BigInt?             @unique @map("comprobante_id")
+  comprobante                Comprobante?        @relation(fields: [comprobanteId], references: [id])
+  creadoPor                  String?             @map("creado_por")
+  creadoEn                   DateTime            @default(now()) @map("creado_en")
+
+  detalle PagoProveedorDetalle[]
+
+  @@index([proveedorId])
+  @@map("pagos_proveedor")
+}
+
+/// Punto 9: multi-línea de cuentas de gasto que juntas deben sumar
+/// `PagoProveedor.montoFactura` (se valida antes de guardar nada).
+model PagoProveedorDetalle {
+  id            Int            @id @default(autoincrement())
+  pagoId        BigInt         @map("pago_id")
+  pago          PagoProveedor  @relation(fields: [pagoId], references: [id])
+  cuentaGastoId Int            @map("cuenta_gasto_id")
+  cuentaGasto   CatalogoCuenta @relation(fields: [cuentaGastoId], references: [id])
+  monto         Decimal        @db.Decimal(12, 2)
+  descripcion   String?
+
+  @@map("pago_proveedor_detalle")
+}
+
+// ============================================================================
+// 11. LIBRO DIARIO / LIBRO MAYOR
+// ============================================================================
+// No llevan tablas propias -- son REPORTES sobre `Comprobante`/`AsientoContable`
+// que ya existen (ver src/lib/reportes/libro-diario.ts y libro-mayor.ts). Se
+// documentan acá solo para dejar constancia de la decisión de diseño.
+
+// ============================================================================
+// 12. CIERRES CONTABLES (Mensual y Anual)
+// ============================================================================
+
+enum EstadoCierre {
+  ABIERTO
+  CERRADO
+}
+
+/// Un renglón por colegio+libro+mes. Mientras esté ABIERTO, el mes admite
+/// nuevos comprobantes con fecha dentro de ese mes; una vez CERRADO, el motor
+/// de partida doble (`procesarPago`, `registrarPagoProveedor`, etc.) debe
+/// RECHAZAR cualquier intento de crear un comprobante con fecha en un mes
+/// cerrado -- así los reportes ya generados no pueden quedar desactualizados
+/// en silencio.
+model CierreContable {
+  id                      Int           @id @default(autoincrement())
+  colegioId               Int           @map("colegio_id")
+  colegio                 Colegio       @relation(fields: [colegioId], references: [id])
+  libro                   LibroContable @default(COLEGIO)
+  anio                    Int
+  mes                     Int
+  estado                  EstadoCierre  @default(ABIERTO)
+  fechaCierre             DateTime?     @map("fecha_cierre")
+  cerradoPor              String?       @map("cerrado_por")
+  /// Snapshots congelados de los 3 reportes AL MOMENTO del cierre. Una vez
+  /// cerrado, estos JSON ya no se recalculan (para volver a generarlos hay
+  /// que reabrir el mes explícitamente).
+  balanzaComprobacionJson Json?         @map("balanza_comprobacion_json")
+  estadoResultadosJson    Json?         @map("estado_resultados_json")
+  balanceGeneralJson      Json?         @map("balance_general_json")
+  creadoEn                DateTime      @default(now()) @map("creado_en")
+
+  @@unique([colegioId, libro, anio, mes])
+  @@map("cierres_contables")
+}
+
+/// Cierre anual: requiere los 12 meses de `CierreContable` ya CERRADOS.
+/// Genera el asiento de cierre (cancela cuentas de Ingreso/Costo/Gasto contra
+/// Resultados Acumulados / Patrimonio) y dispara el "AUTO_CIERRE" que ya
+/// contemplaba `OrigenComprobante`.
+model CierreAnual {
+  id                   Int           @id @default(autoincrement())
+  colegioId            Int           @map("colegio_id")
+  colegio              Colegio       @relation(fields: [colegioId], references: [id])
+  libro                LibroContable @default(COLEGIO)
+  anio                 Int
+  estado               EstadoCierre  @default(ABIERTO)
+  fechaCierre          DateTime?     @map("fecha_cierre")
+  utilidadEjercicio    Decimal?      @db.Decimal(14, 2) @map("utilidad_ejercicio")
+  comprobanteCierreId  BigInt?       @map("comprobante_cierre_id")
+  comprobanteCierre    Comprobante?  @relation("CierreAnualComprobante", fields: [comprobanteCierreId], references: [id])
+  estadoResultadosJson Json?         @map("estado_resultados_json")
+  balanceGeneralJson   Json?         @map("balance_general_json")
+  creadoEn             DateTime      @default(now()) @map("creado_en")
+
+  @@unique([colegioId, libro, anio])
+  @@map("cierres_anuales")
+}
+
+// ============================================================================
+// 13. MÓDULO DE NÓMINAS (planos -- pendiente el Excel de nómina de Eduardo)
+// ============================================================================
+// Diseño provisional que ya soporta los 4 esquemas que Eduardo describió
+// (7 sept 2026), pero SIN calcular todavía INSS patronal/laboral ni tablas
+// de IR por tramos de la DGI -- esos porcentajes/tramos deben confirmarse
+// contra el Excel de nómina real (avisar a Eduardo, ver bitácora). Por ahora
+// el sistema registra el salario bruto, aplica SOLO las retenciones que
+// Eduardo ya confirmó explícitamente (10%/2% para el Instituto) y deja el
+// resto de las deducciones como campos manuales editables.
+//
+// ACTUALIZADO 7 sept 2026: Eduardo subió los 3 Excel reales de nómina
+// ("04 NÓMINAS 2026 1/1./2.xlsx"). Se identificaron por el nombre real del
+// colegio en la hoja "COLILLAS" de cada uno:
+//   - Personal fijo de "COLEGIO PRIVADO METODISTA LIBRE DE NICARAGUA - EL
+//     MESÍAS" (14 empleados: Dexton, Marlon, Ingrid...).
+//   - Personal fijo del "INSTITUTO TECNOLÓGICO METODISTA LIBRE DE NICARAGUA"
+//     (Josseling, Jamileth, Brenda... -- misma estructura que El Mesías).
+//   - "PAGO POR SERVICIOS" del mismo Instituto (Lester, Gustavo... Servicio
+//     General 2%; Peter Robinson, Servicio Profesional 10%).
+// Con esos 3 archivos se confirmaron las fórmulas REALES (columnas AE-AH de
+// cada hoja mensual, ej. "AGOST 2026"):
+//   INSS Laboral   = (Total Ingresos - Viáticos Transporte) * 7%
+//   INSS Patronal  = Salario Cotizado * 21.5% ("CUOTA PATRONAL POR PAGAR
+//                    (21.5%)" -- tasa para empleadores con MENOS de 50
+//                    trabajadores; la ley nicaragüense sube a 22.5% a partir
+//                    de 50 trabajadores, que es la cifra que Eduardo mencionó
+//                    de memoria -- ninguno de los 3 colegios llega a 50
+//                    empleados todavía, así que 21.5% es la correcta hoy).
+//   IR             = NINGUNO de los 3 Excel reales calcula IR mensual
+//                    todavía (ni admin ni docentes) -- se implementa la
+//                    tabla progresiva completa de Ley 822 (confirmada contra
+//                    fuentes públicas actualizadas de legislación laboral
+//                    nicaragüense 2026) para cuando algún salario la
+//                    supere, pero HOY da C$0 para todos los empleados reales
+//                    de los 3 archivos (ninguno supera el tramo exento).
+//   INATEC         = los 3 Excel reales lo traen en CERO (no lo están
+//                    aplicando) -- se deja APAGADO por defecto
+//                    (`aplicarInatec`), a confirmar con Eduardo si el
+//                    colegio está exonerado o si debería empezar a
+//                    aplicarse (por ley es 2% patronal).
+//   Servicio Profesional (docente por hora) = 10% -- confirmado exacto.
+//   Servicio General (contrato) = 2% -- confirmado exacto.
+// Nota de calidad de datos: en el archivo de "PAGO POR SERVICIOS" del
+// Instituto, un docente (Peter Joseph Robinson Talavera) aparece en Febrero
+// 2026 como "Servicio Profesional" con 10% correcto, pero de Marzo en
+// adelante alguien le cambió la etiqueta a "Docente" y la fórmula se quedó
+// pegada en 2% (arrastrada de las filas de arriba) -- es un error de la
+// plantilla real de Eduardo, no una regla nueva. Avisar para que lo revise.
+//
+// ACTUALIZADO 7 sept 2026 (de noche): Eduardo subió los 2 Excel reales de
+// El Buen Pastor ("04 NÓMINAS 2026 1 5.xlsx" = personal INSCRITO al INSS,
+// tiene hojas "Decla. Inss [Mes]"; "04 NÓMINAS 2026 2 2.xlsx" = personal
+// NO inscrito, INSS Laboral en C$0 en las 24 quincenas revisadas). Ambos
+// esquemas quedan CONFIRMADOS contra datos reales (enero-marzo 2026, 8
+// empleados, 3 meses):
+//   - Pagan QUINCENAL, pero el INSS Laboral (7%) del personal inscrito se
+//     retiene TODO junto en la 2da quincena del mes (0% en la 1ra) -- ya
+//     que 14% de un pago quincenal = 7% del salario mensual completo, el
+//     total mensual retenido es idéntico a un esquema mensual normal, así
+//     que la `PlanillaMensual` (mensual) no necesitó ningún cambio de
+//     estructura para modelarlo -- ver `calcularDeduccionesNomina`.
+//   - "Piso de cotización" de C$8,341.29/mes (`PISO_COTIZACION_DOCENCIA_
+//     MENSUAL` en `inss-ir.ts`): cuando el salario real de un docente/
+//     administrativo inscrito es MENOR a este piso, el colegio declara y
+//     paga al INSS el 7%/21.5% sobre el piso (no sobre el real), pero solo
+//     le deduce al empleado el 7% de su salario real -- la diferencia
+//     ("subsidioInssPiso") la asume El Buen Pastor como gasto patronal
+//     adicional. Confirmado exacto (24/24 casos) contra la hoja real
+//     "Decla. Inss [Mes]" de los 3 meses. Ninguno de los otros 2 colegios
+//     usa este piso.
+//   - DOCENTE_NO_INSS: confirmado 0% INSS en las 48 quincenas reales
+//     revisadas (2 quincenas x 3 meses x 8 empleados) -- ya no es
+//     provisional.
+//   - IR: tampoco aparece en ninguno de los 2 Excel de Buen Pastor (mismo
+//     patrón que El Mesías/Instituto) -- sigue en C$0 hasta que algún
+//     salario supere el tramo exento de Ley 822.
+
+enum TipoNomina {
+  /// Instituto: docentes pagados por hora/clase -- 10% de retención.
+  DOCENTE_HORARIO
+  /// Instituto: trabajadores con contrato por servicios generales -- 2% de retención.
+  CONTRATO_SERVICIOS_GENERALES
+  /// Instituto (personal fijo) y El Mesías -- misma estructura de nómina fija.
+  PERSONAL_FIJO
+  /// El Buen Pastor: maestros inscritos al INSS.
+  DOCENTE_INSS
+  /// El Buen Pastor: maestros NO inscritos al INSS.
+  DOCENTE_NO_INSS
+}
+
+model Empleado {
+  id              Int         @id @default(autoincrement())
+  colegioId       Int         @map("colegio_id")
+  colegio         Colegio     @relation(fields: [colegioId], references: [id])
+  nombreCompleto  String      @map("nombre_completo")
+  cedula          String?
+  cargo           String?
+  tipoNomina      TipoNomina  @map("tipo_nomina")
+  /// Solo relevante para El Buen Pastor -- si está inscrito o no al INSS
+  /// (para el resto de colegios/esquemas queda en false y no se usa).
+  inscritoInss    Boolean     @default(false) @map("inscrito_inss")
+  salarioBase     Decimal?    @db.Decimal(12, 2) @map("salario_base") // PERSONAL_FIJO / DOCENTE_INSS / DOCENTE_NO_INSS
+  tarifaPorHora   Decimal?    @db.Decimal(12, 2) @map("tarifa_por_hora") // DOCENTE_HORARIO
+  activo          Boolean     @default(true)
+  fechaIngreso    DateTime?   @db.Date @map("fecha_ingreso")
+
+  detallePlanilla PlanillaDetalle[]
+
+  @@map("empleados")
+}
+
+model PlanillaMensual {
+  id            Int           @id @default(autoincrement())
+  colegioId     Int           @map("colegio_id")
+  colegio       Colegio       @relation(fields: [colegioId], references: [id])
+  tipoNomina    TipoNomina    @map("tipo_nomina")
+  anio          Int
+  mes           Int
+  estado        EstadoCierre  @default(ABIERTO) // ABIERTO = en edición, CERRADO = pagada y jornalizada
+  comprobanteId BigInt?       @map("comprobante_id")
+  comprobante   Comprobante?  @relation("PlanillaComprobante", fields: [comprobanteId], references: [id])
+  creadoEn      DateTime      @default(now()) @map("creado_en")
+
+  detalle PlanillaDetalle[]
+
+  @@unique([colegioId, tipoNomina, anio, mes])
+  @@map("planillas_mensuales")
+}
+
+model PlanillaDetalle {
+  id                  Int             @id @default(autoincrement())
+  planillaId          Int             @map("planilla_id")
+  planilla            PlanillaMensual @relation(fields: [planillaId], references: [id])
+  empleadoId          Int             @map("empleado_id")
+  empleado            Empleado        @relation(fields: [empleadoId], references: [id])
+  /// Solo DOCENTE_HORARIO: cantidad de horas/clases del mes.
+  horasOClases        Decimal?        @db.Decimal(8, 2) @map("horas_o_clases")
+  /// "Total Ingresos" del periodo (igual que la columna M del Excel real):
+  /// salario ordinario + feriados + subsidio + vacaciones, SIN viáticos.
+  salarioBruto        Decimal         @db.Decimal(12, 2) @map("salario_bruto")
+  /// = (salarioBruto - viáticos) * 7% -- confirmado exacto contra el Excel
+  /// real (fórmula "=(Total Ingresos - Viáticos)*7%"). Solo PERSONAL_FIJO/
+  /// DOCENTE_INSS; 0 para los demás esquemas.
+  inssLaboral         Decimal         @default(0) @db.Decimal(12, 2) @map("inss_laboral")
+  /// = salarioBruto * 21.5% (o 22.5% si el colegio ya tiene 50+ empleados) --
+  /// GASTO patronal adicional, NO reduce el salario neto del empleado.
+  /// Confirmado exacto contra el Excel real ("CUOTA PATRONAL POR PAGAR
+  /// (21.5%)"). Solo PERSONAL_FIJO/DOCENTE_INSS; 0 para los demás esquemas.
+  inssPatronal        Decimal         @default(0) @db.Decimal(12, 2) @map("inss_patronal")
+  /// = salarioBruto * 2% -- GASTO patronal adicional (Ley), NO reduce el
+  /// salario neto. Los 3 Excel reales de Eduardo lo traen en CERO (no lo
+  /// aplican) -- por eso queda en 0 salvo que se active `aplicarInatec`.
+  inatecPatronal      Decimal         @default(0) @db.Decimal(12, 2) @map("inatec_patronal")
+  /// IR mensual por la tabla progresiva de Ley 822 (proyección anual del
+  /// salario neto de INSS, dividido entre 12) -- da C$0 mientras el salario
+  /// no supere el tramo exento (hoy ningún empleado real de los 3 Excel lo
+  /// supera). Solo PERSONAL_FIJO/DOCENTE_INSS/DOCENTE_NO_INSS.
+  irMensual           Decimal         @default(0) @db.Decimal(12, 2) @map("ir_mensual")
+  /// Solo DOCENTE_INSS (El Buen Pastor) cuando el salario real del empleado
+  /// no alcanza el "piso de cotización" (`PISO_COTIZACION_DOCENCIA_MENSUAL`,
+  /// hoy C$8,341.29/mes): = inssLaboral-que-hay-que-pagar-al-INSS-sobre-el-
+  /// piso MENOS inssLaboral-deducido-al-empleado-sobre-su-salario-real.
+  /// Gasto patronal adicional (el colegio completa la cotización mínima de
+  /// su bolsillo) -- confirmado exacto (24/24) contra la hoja real "Decla.
+  /// Inss [Mes]". 0 para todos los demás esquemas/colegios.
+  subsidioInssPiso    Decimal         @default(0) @db.Decimal(12, 2) @map("subsidio_inss_piso")
+  /// 10% (DOCENTE_HORARIO, "Servicio Profesional") o 2% (CONTRATO_SERVICIOS_GENERALES, "Servicio General") -- confirmado exacto contra el Excel real.
+  porcentajeRetencion Decimal         @default(0) @db.Decimal(5, 2) @map("porcentaje_retencion")
+  montoRetencion      Decimal         @default(0) @db.Decimal(12, 2) @map("monto_retencion")
+  /// = salarioBruto - inssLaboral - irMensual - montoRetencion (inssPatronal/inatecPatronal NO se restan -- son gasto patronal aparte, no deducción del empleado).
+  salarioNeto         Decimal         @db.Decimal(12, 2) @map("salario_neto")
+  observacion         String?
+
+  @@unique([planillaId, empleadoId])
+  @@map("planilla_detalle")
+}
+
+// ============================================================================
+// 14. USUARIOS Y CONTROL DE ACCESO (inicio de sesión de la aplicación web)
+// ============================================================================
+// No es parte del catálogo contable -- controla quién puede entrar a cada
+// pantalla del sistema (7 sept 2026, pedido de Eduardo para la prueba local).
+// Cada usuario tiene UN solo rol; el rol decide qué pantallas ve
+// (`src/lib/auth/roles.ts` es la única fuente de verdad de esa relación
+// ruta<->rol, para no repetirla en cada pantalla).
+
+enum RolUsuario {
+  /// Solo Pantalla de Cajera (Punto de Venta): cobros, ROC, reportes de caja.
+  CAJERA
+  /// Egresos/Proveedores, Nóminas, Retenciones DGI, Libro Diario/Mayor y Cierres.
+  CONTADOR
+  /// Dashboard Consolidado (las 3 sedes) y auditoría ICCM.
+  JUNTA_DIRECTIVA
+}
+
+model Usuario {
+  id             Int        @id @default(autoincrement())
+  /// Nombre de usuario para iniciar sesión (no es un correo).
+  usuario        String     @unique @db.VarChar(40)
+  nombreCompleto String     @db.VarChar(150) @map("nombre_completo")
+  /// Hash bcrypt -- la contraseña en texto plano NUNCA se guarda en la base de datos.
+  passwordHash   String     @map("password_hash")
+  rol            RolUsuario
+  activo         Boolean    @default(true)
+  creadoEn       DateTime   @default(now()) @map("creado_en")
+
+  @@map("usuarios")
+}

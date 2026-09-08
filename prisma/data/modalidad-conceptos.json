@@ -1,0 +1,42 @@
+{
+  "_comentario": "Mapa que le dice al sistema qué 'Concepto de Arancel' (y por lo tanto qué cuenta contable) usar según la Modalidad del estudiante. null = ese concepto no aplica en esa modalidad. Ajusta este archivo si alguna modalidad debe cobrarse distinto — no hace falta tocar código.",
+
+  "Educación Preescolar y Primaria": {
+    "matricula": "Matricula",
+    "mensualidad": "Mensualidad",
+    "papeleria": "Papelería",
+    "decimoTercero": "Decimo Tercer Mes"
+  },
+  "Secundaria Regular": {
+    "_nota": "Regla fija de Eduardo (7 sept 2026): Secundaria Regular (7:00am-12:00pm) contabiliza igual que Preescolar/Primaria.",
+    "matricula": "Matricula",
+    "mensualidad": "Mensualidad",
+    "papeleria": "Papelería",
+    "decimoTercero": "Decimo Tercer Mes"
+  },
+  "Secundaria Técnica": {
+    "_nota": "Regla fija de Eduardo (7 sept 2026): Secundaria Técnica (7:00am-3:00pm) contabiliza en la cuenta 4102, pero con SU PROPIO sub-código (410209/410210/410211), separado de Carreras Técnicas -- confirmado el 7 sept 2026 porque Eduardo necesita ver ese ingreso por separado. 'decimoTercero' se dejó en null igual que Carreras Técnicas/Cursos Libres porque no se ha confirmado si Secundaria Técnica cobra Décimo Tercer Mes -- avisame si sí lo cobra (es una modalidad de Secundaria, no de cursos vocacionales, así que podría aplicar) y le creamos su cuenta (código disponible: 410217).",
+    "matricula": "Matricula (S.T.)",
+    "mensualidad": "Mensualidad (S.T.)",
+    "papeleria": "Papelería (S.T.)",
+    "decimoTercero": null
+  },
+  "Carreras Técnicas": {
+    "matricula": "Matricula (C.T.)",
+    "mensualidad": "Mensualidad (C.T.)",
+    "papeleria": "Papelería (C.T.)",
+    "decimoTercero": null
+  },
+  "Cursos Libres": {
+    "matricula": "Matricula (C.L.)",
+    "mensualidad": "Mensualidad (C.L.)",
+    "papeleria": "Papelería (C.L.)",
+    "decimoTercero": null
+  },
+  "ICCM": {
+    "matricula": null,
+    "mensualidad": "ICCM - Mensualidad",
+    "papeleria": null,
+    "decimoTercero": null
+  }
+}

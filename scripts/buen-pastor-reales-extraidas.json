@@ -1,0 +1,1112 @@
+{
+  "no_inss_quincenas": [
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "nombre": "Eduardo Humberto Cruz Paniagua",
+      "salarioQuincenal": 4734.3,
+      "totalIngresos": 4734.3,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 4734.3
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "nombre": "Aura Estela Morales Orozco",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "nombre": "Ana Julia Gallegos",
+      "salarioQuincenal": 2196.85,
+      "totalIngresos": 2196.85,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 2196.85
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "nombre": "Francisco Michael Mercado Gómez",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "nombre": "Maritza del socorro Aburto Reyes",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "nombre": "Elvin Jose Blas Lopez",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "nombre": "Martha Alicia Alvarado Padilla",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "nombre": "Rosa Argentina Salgado",
+      "salarioQuincenal": 2800.0,
+      "totalIngresos": 2800.0,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 2800.0
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "nombre": "Juana del Socorro Pérez Cabrera",
+      "salarioQuincenal": 5714.9,
+      "totalIngresos": 5714.9,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 5714.9
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "nombre": "Eduardo Humberto Cruz Paniagua",
+      "salarioQuincenal": 4734.3,
+      "totalIngresos": 4734.3,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 4734.3
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "nombre": "Aura Estela Morales Orozco",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "nombre": "Ana Julia Gallegos",
+      "salarioQuincenal": 2196.85,
+      "totalIngresos": 2196.85,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 2196.85
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "nombre": "Francisco Michael Mercado Gómez",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "nombre": "Maritza del socorro Aburto Reyes",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "nombre": "Elvin Jose Blas Lopez",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "nombre": "Martha Alicia Alvarado Padilla",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "nombre": "Eduardo Humberto Cruz Paniagua",
+      "salarioQuincenal": 4734.3,
+      "totalIngresos": 4734.3,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 4734.3
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "nombre": "Aura Estela Morales Orozco",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "nombre": "Ana Julia Gallegos",
+      "salarioQuincenal": 2196.85,
+      "totalIngresos": 2196.85,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 2196.85
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "nombre": "Francisco Michael Mercado Gómez",
+      "salarioQuincenal": 3489.0333333333333,
+      "totalIngresos": 3489.0333333333333,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3489.0333333333333
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "nombre": "Maritza del socorro Aburto Reyes",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "nombre": "Elvin Jose Blas Lopez",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "nombre": "Martha Alicia Alvarado Padilla",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "nombre": "Rosa Argentina Salgado",
+      "salarioQuincenal": 2800.0,
+      "totalIngresos": 2800.0,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 2800.0
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "nombre": "Juana del Socorro Pérez Cabrera",
+      "salarioQuincenal": 5714.9,
+      "totalIngresos": 5714.9,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 5714.9
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "nombre": "Eduardo Humberto Cruz Paniagua",
+      "salarioQuincenal": 4734.3,
+      "totalIngresos": 4734.3,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 4734.3
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "nombre": "Aura Estela Morales Orozco",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "nombre": "Ana Julia Gallegos",
+      "salarioQuincenal": 2196.85,
+      "totalIngresos": 2196.85,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 2196.85
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "nombre": "Francisco Michael Mercado Gómez",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "nombre": "Maritza del socorro Aburto Reyes",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "nombre": "Elvin Jose Blas Lopez",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "nombre": "Martha Alicia Alvarado Padilla",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "nombre": "Eduardo Humberto Cruz Paniagua",
+      "salarioQuincenal": 4734.3,
+      "totalIngresos": 4734.3,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 4734.3
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "nombre": "Aura Estela Morales Orozco",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "nombre": "Ana Julia Gallegos",
+      "salarioQuincenal": 2196.85,
+      "totalIngresos": 2196.85,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 2196.85
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "nombre": "Francisco Michael Mercado Gómez",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "nombre": "Maritza del socorro Aburto Reyes",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "nombre": "Elvin Jose Blas Lopez",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "nombre": "Martha Alicia Alvarado Padilla",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "nombre": "Rosa Argentina Salgado",
+      "salarioQuincenal": 2800.0,
+      "totalIngresos": 2800.0,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 2800.0
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "nombre": "Juana del Socorro Pérez Cabrera",
+      "salarioQuincenal": 5714.9,
+      "totalIngresos": 5714.9,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 5714.9
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "nombre": "Eduardo Humberto Cruz Paniagua",
+      "salarioQuincenal": 4734.3,
+      "totalIngresos": 4734.3,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 4734.3
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "nombre": "Aura Estela Morales Orozco",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "nombre": "Ana Julia Gallegos",
+      "salarioQuincenal": 2196.85,
+      "totalIngresos": 2196.85,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 2196.85
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "nombre": "Francisco Michael Mercado Gómez",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "nombre": "Maritza del socorro Aburto Reyes",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "nombre": "Elvin Jose Blas Lopez",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "nombre": "Martha Alicia Alvarado Padilla",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "totalDeducciones": 0.0,
+      "netoReal": 3738.25
+    }
+  ],
+  "inss_quincenas": [
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Irma María Orozco Montenegro",
+      "salarioQuincenal": 7208.0,
+      "totalIngresos": 7208.0,
+      "inssLaboralReal": 1009.1200000000001,
+      "netoReal": 6198.88
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "esSegundaQuincena": true,
+      "nombre": "María Félix Dávila Hernández",
+      "salarioQuincenal": 4171.23,
+      "totalIngresos": 4171.23,
+      "inssLaboralReal": 583.9722,
+      "netoReal": 3587.2577999999994
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Erlin Amaru Moran Rodríguez",
+      "salarioQuincenal": 3810.0,
+      "totalIngresos": 3810.0,
+      "inssLaboralReal": 533.4000000000001,
+      "netoReal": 3276.6
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Francheska Jiokasta Vásquez Gallegos",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Angélica María Dávila Robleto",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Nuria del Carmen Brenes Obregón",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Blanca Judith Cano Berroteran",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. MAR 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Juana Albertina Moraga Aguilar",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Irma María Orozco Montenegro",
+      "salarioQuincenal": 7208.0,
+      "totalIngresos": 7208.0,
+      "inssLaboralReal": 0.0,
+      "netoReal": 7208.0
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "esSegundaQuincena": false,
+      "nombre": "María Félix Dávila Hernández",
+      "salarioQuincenal": 4171.23,
+      "totalIngresos": 4171.23,
+      "inssLaboralReal": 0.0,
+      "netoReal": 4171.23
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Erlin Amaru Moran Rodríguez",
+      "salarioQuincenal": 3810.0,
+      "totalIngresos": 3810.0,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3810.0
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Francheska Jiokasta Vásquez Gallegos",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Angélica María Dávila Robleto",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Nuria del Carmen Brenes Obregón",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Blanca Judith Cano Berroteran",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.MAR 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Juana Albertina Moraga Aguilar",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Irma María Orozco Montenegro",
+      "salarioQuincenal": 7208.0,
+      "totalIngresos": 7208.0,
+      "inssLaboralReal": 1009.1200000000001,
+      "netoReal": 6198.88
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "esSegundaQuincena": true,
+      "nombre": "María Félix Dávila Hernández",
+      "salarioQuincenal": 4171.23,
+      "totalIngresos": 4171.23,
+      "inssLaboralReal": 583.9722,
+      "netoReal": 3587.2577999999994
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Erlin Amaru Moran Rodríguez",
+      "salarioQuincenal": 3810.0,
+      "totalIngresos": 3810.0,
+      "inssLaboralReal": 533.4000000000001,
+      "netoReal": 3276.6
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Francheska Jiokasta Vásquez Gallegos",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Angélica María Dávila Robleto",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Nuria del Carmen Brenes Obregón",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Blanca Judith Cano Berroteran",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. FEB 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Juana Albertina Moraga Aguilar",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Irma María Orozco Montenegro",
+      "salarioQuincenal": 7208.0,
+      "totalIngresos": 7208.0,
+      "inssLaboralReal": 0.0,
+      "netoReal": 7208.0
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "esSegundaQuincena": false,
+      "nombre": "María Félix Dávila Hernández",
+      "salarioQuincenal": 4171.23,
+      "totalIngresos": 4171.23,
+      "inssLaboralReal": 0.0,
+      "netoReal": 4171.23
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Erlin Amaru Moran Rodríguez",
+      "salarioQuincenal": 3810.0,
+      "totalIngresos": 3810.0,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3810.0
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Francheska Jiokasta Vásquez Gallegos",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Angélica María Dávila Robleto",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Nuria del Carmen Brenes Obregón",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Blanca Judith Cano Berroteran",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.FEB 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Juana Albertina Moraga Aguilar",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Irma María Orozco Montenegro",
+      "salarioQuincenal": 7208.0,
+      "totalIngresos": 7208.0,
+      "inssLaboralReal": 1009.1200000000001,
+      "netoReal": 6198.88
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "esSegundaQuincena": true,
+      "nombre": "María Félix Dávila Hernández",
+      "salarioQuincenal": 4171.23,
+      "totalIngresos": 4171.23,
+      "inssLaboralReal": 583.9722,
+      "netoReal": 3587.2577999999994
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Erlin Amaru Moran Rodríguez",
+      "salarioQuincenal": 3810.0,
+      "totalIngresos": 3810.0,
+      "inssLaboralReal": 533.4000000000001,
+      "netoReal": 3276.6
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Francheska Jiokasta Vásquez Gallegos",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Angélica María Dávila Robleto",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Nuria del Carmen Brenes Obregón",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Blanca Judith Cano Berroteran",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "2DA QUINC. ENE 2026",
+      "esSegundaQuincena": true,
+      "nombre": "Juana Albertina Moraga Aguilar",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 523.355,
+      "netoReal": 3214.895
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Irma María Orozco Montenegro",
+      "salarioQuincenal": 7208.0,
+      "totalIngresos": 7208.0,
+      "inssLaboralReal": 0.0,
+      "netoReal": 7208.0
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "esSegundaQuincena": false,
+      "nombre": "María Félix Dávila Hernández",
+      "salarioQuincenal": 4171.23,
+      "totalIngresos": 4171.23,
+      "inssLaboralReal": 0.0,
+      "netoReal": 4171.23
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Erlin Amaru Moran Rodríguez",
+      "salarioQuincenal": 3810.0,
+      "totalIngresos": 3810.0,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3810.0
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Francheska Jiokasta Vásquez Gallegos",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Angélica María Dávila Robleto",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Nuria del Carmen Brenes Obregón",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Blanca Judith Cano Berroteran",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    },
+    {
+      "quincena": "1RA QUINC.ENE 2026",
+      "esSegundaQuincena": false,
+      "nombre": "Juana Albertina Moraga Aguilar",
+      "salarioQuincenal": 3738.25,
+      "totalIngresos": 3738.25,
+      "inssLaboralReal": 0.0,
+      "netoReal": 3738.25
+    }
+  ],
+  "inss_declaraciones": [
+    {
+      "mes": "Decla. Inss Marzo 2026",
+      "nombre": "Irma María Orozco Montenegro",
+      "salarioMensual": 14416.0,
+      "totalIngresos": 14416.0,
+      "inssLaboralDeducido": 1009.1200000000001,
+      "salarioRealAReportar": 14416.0,
+      "inssLaboral7PorPagar": 1009.1200000000001,
+      "inssPatronal21_5PorPagar": 3099.44
+    },
+    {
+      "mes": "Decla. Inss Marzo 2026",
+      "nombre": "María Félix Dávila Hernández",
+      "salarioMensual": 8342.46,
+      "totalIngresos": 8342.46,
+      "inssLaboralDeducido": 583.9722,
+      "salarioRealAReportar": 8342.46,
+      "inssLaboral7PorPagar": 583.9722,
+      "inssPatronal21_5PorPagar": 1793.6288999999997
+    },
+    {
+      "mes": "Decla. Inss Marzo 2026",
+      "nombre": "Erlin Amaru Moran Rodríguez",
+      "salarioMensual": 7620.0,
+      "totalIngresos": 7620.0,
+      "inssLaboralDeducido": 533.4000000000001,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Marzo 2026",
+      "nombre": "Francheska Jiokasta Vásquez Gallegos",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Marzo 2026",
+      "nombre": "Angélica María Dávila Robleto",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Marzo 2026",
+      "nombre": "Nuria del Carmen Brenes Obregón",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Marzo 2026",
+      "nombre": "Blanca Judith Cano Berroteran",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Marzo 2026",
+      "nombre": "Juana Albertina Moraga Aguilar",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Febrero 2026",
+      "nombre": "Irma María Orozco Montenegro",
+      "salarioMensual": 14416.0,
+      "totalIngresos": 14416.0,
+      "inssLaboralDeducido": 1009.1200000000001,
+      "salarioRealAReportar": 14416.0,
+      "inssLaboral7PorPagar": 1009.1200000000001,
+      "inssPatronal21_5PorPagar": 3099.44
+    },
+    {
+      "mes": "Decla. Inss Febrero 2026",
+      "nombre": "María Félix Dávila Hernández",
+      "salarioMensual": 8342.46,
+      "totalIngresos": 8342.46,
+      "inssLaboralDeducido": 583.9722,
+      "salarioRealAReportar": 8342.46,
+      "inssLaboral7PorPagar": 583.9722,
+      "inssPatronal21_5PorPagar": 1793.6288999999997
+    },
+    {
+      "mes": "Decla. Inss Febrero 2026",
+      "nombre": "Erlin Amaru Moran Rodríguez",
+      "salarioMensual": 7620.0,
+      "totalIngresos": 7620.0,
+      "inssLaboralDeducido": 533.4000000000001,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Febrero 2026",
+      "nombre": "Francheska Jiokasta Vásquez Gallegos",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Febrero 2026",
+      "nombre": "Angélica María Dávila Robleto",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Febrero 2026",
+      "nombre": "Nuria del Carmen Brenes Obregón",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Febrero 2026",
+      "nombre": "Blanca Judith Cano Berroteran",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Febrero 2026",
+      "nombre": "Juana Albertina Moraga Aguilar",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Enero 2026",
+      "nombre": "Irma María Orozco Montenegro",
+      "salarioMensual": 14416.0,
+      "totalIngresos": 14416.0,
+      "inssLaboralDeducido": 1009.1200000000001,
+      "salarioRealAReportar": 14416.0,
+      "inssLaboral7PorPagar": 1009.1200000000001,
+      "inssPatronal21_5PorPagar": 3099.44
+    },
+    {
+      "mes": "Decla. Inss Enero 2026",
+      "nombre": "María Félix Dávila Hernández",
+      "salarioMensual": 8342.46,
+      "totalIngresos": 8342.46,
+      "inssLaboralDeducido": 583.9722,
+      "salarioRealAReportar": 8342.46,
+      "inssLaboral7PorPagar": 583.9722,
+      "inssPatronal21_5PorPagar": 1793.6288999999997
+    },
+    {
+      "mes": "Decla. Inss Enero 2026",
+      "nombre": "Erlin Amaru Moran Rodríguez",
+      "salarioMensual": 7620.0,
+      "totalIngresos": 7620.0,
+      "inssLaboralDeducido": 533.4000000000001,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Enero 2026",
+      "nombre": "Francheska Jiokasta Vásquez Gallegos",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Enero 2026",
+      "nombre": "Angélica María Dávila Robleto",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Enero 2026",
+      "nombre": "Nuria del Carmen Brenes Obregón",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Enero 2026",
+      "nombre": "Blanca Judith Cano Berroteran",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    },
+    {
+      "mes": "Decla. Inss Enero 2026",
+      "nombre": "Juana Albertina Moraga Aguilar",
+      "salarioMensual": 7476.5,
+      "totalIngresos": 7476.5,
+      "inssLaboralDeducido": 523.355,
+      "salarioRealAReportar": 8341.29,
+      "inssLaboral7PorPagar": 583.8903000000001,
+      "inssPatronal21_5PorPagar": 1793.3773500000002
+    }
+  ]
+}
